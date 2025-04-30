@@ -1,69 +1,49 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from .decorators import unauthenticated_user, allowed_users
-from .models import *
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group
-from .form import SignUpForm
-from django.contrib import messages
-from .models import *
+import logging
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
+from .serializers import RegisterSerializer
 
-def user_login(request):
-    username = request.session.pop('temp_username', '')
-    password = request.session.pop('temp_password', '')
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request,user)
-            return redirect('home_user')
-        else :
-            messages.info(request, 'username or password is incorrect')
+logger = logging.getLogger(__name__)
 
-    return render(request, 'users/user_login.html', {'username': username, 'password': password})
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_api(request):
+    logger.info("Register API called with data: %s", request.data)
 
-
-@unauthenticated_user
-def sign_up(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-
-            group = Group.objects.get(name='users')
-            user.groups.add(group)
-
-            # using sessions to store the user info
-            request.session['temp_username'] = username
-            request.session['temp_password'] = password
-            return redirect('user_login')
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        try:
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logger.error("Error creating user: %s", str(e))
+            return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
-        form = SignUpForm()
-    return render(request, 'users/sign_up.html', locals())
+        logger.error("Validation errors: %s", serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def user_logout(request):
-    logout(request)
-    return redirect('user_login')
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_api(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
 
-@unauthenticated_user
-def index(request):
-    return render(request, 'index.html')
+    user = authenticate(username=username, password=password)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
-def home_page_admin(request):
-    return render(request,'users/home_page_admin.html')
-
-
-######## HomePage for users (logged in )
-def home_page_user(request):
-    return render(request,'users/home_page_user.html')
-
-
-@login_required(login_url='login')
-def home_user(request):
-    films = Film.objects.all()
-    return render(request,'users/home_page_user.html',{'films':films})
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }, status=status.HTTP_200_OK)
+    else:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)

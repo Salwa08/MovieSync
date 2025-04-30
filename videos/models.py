@@ -7,6 +7,26 @@ TYPES_CHOICES = [
     ('series', 'Series'),
     ('anime', 'Anime'),
     ('short', 'Short Film'),
+    ('tv_show', 'TV Show'),
+]
+
+GENRES_CHOICES = [
+    ('action', 'Action'),
+    ('adventure', 'Adventure'),
+    ('comedy', 'Comedy'),
+    ('crime', 'Crime'),
+    ('drama', 'Drama'),
+    ('fantasy', 'Fantasy'),
+    ('historical', 'Historical'),
+    ('horror', 'Horror'),
+    ('mystery', 'Mystery'),
+    ('romance', 'Romance'),
+    ('sci-fi', 'Sci-Fi'),
+    ('thriller', 'Thriller'),
+    ('western', 'Western'),
+    ('animation', 'Animation'),
+    ('documentary', 'Documentary'),
+    ('biography', 'Biography'),
 ]
 
 class Content(models.Model) :

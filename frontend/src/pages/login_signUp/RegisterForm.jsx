@@ -13,19 +13,19 @@ const RegisterForm = ({
   setAcceptedTerms,
 }) => {
   return (
-    <section className="flex flex-col justify-center items-center mx-auto w-full max-w-none h-screen max-md:max-w-[991px] max-sm:max-w-screen-sm">
-      <header className="flex justify-center items-center py-6 pr-20 pl-14 w-full h-[91px] max-sm:px-5 max-sm:py-6">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 to-red-950 flex flex-col justify-center items-center w-full">
+      <header className="absolute top-6 left-14 max-sm:left-5">
         <Logo />
       </header>
 
-      <main className="flex relative flex-col justify-center items-center h-[616px] w-[463px] max-md:h-auto max-md:w-[90%] max-sm:p-5 max-sm:w-full">
-        <div className="absolute bg-white bg-opacity-10 h-[596px] rounded-[80px] w-[443px]" />
+      <main className="flex flex-col justify-center items-center w-[443px] max-w-md mx-auto max-md:w-[90%] max-sm:w-full">
+        <div className="w-full bg-white bg-opacity-10 rounded-[40px] p-8 backdrop-blur-sm">
 
-        <form
-          className="flex relative flex-col gap-5 items-center"
+          <form
+          className="flex flex-col gap-5 items-center"
           onSubmit={handleSubmit}
-        >
-          <h1 className="text-base font-bold text-center text-white leading-[50px]">
+          >
+          <h1 className="text-2xl font-bold text-center text-white mb-4">
             Register
           </h1>
 
@@ -56,7 +56,7 @@ const RegisterForm = ({
             onChange={handleChange}
           />
 
-          <div className="flex items-center pl-16 -ml-1">
+          <div className="flex items-start w-full mt-2">
             <Checkbox
               htmlFor="terms"
               checked={acceptedTerms}
@@ -64,23 +64,23 @@ const RegisterForm = ({
               label={
                 <>
                   I have read and accept the Terms of
-                  <span className="text-slate-200">
-                    {" "}
-                    Service & Privacy Policy *
+                  <span> Service & Privacy Policy *
                   </span>
                 </>
               }
             />
           </div>
 
-          <a href="/login" className="text-base text-white underline">
+          <a href="/login" className="text-white hover:underline text-sm mt-2">
             Already have account?
           </a>
-
+          <div className="mt-4 w-full flex justify-center">
           <Button type="submit">Continue</Button>
+          </div>
         </form>
+        </div>
       </main>
-    </section>
+    </div>
   );
 };
 

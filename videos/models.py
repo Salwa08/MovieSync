@@ -29,6 +29,16 @@ GENRES_CHOICES = [
     ('biography', 'Biography'),
 ]
 
+CATEGORY_CHOICES = [
+    ('popular', 'Popular'),
+    ('fantasy', 'Fantasy'),
+    ('action', 'Action'),
+    ('thriller', 'Thriller'),
+    ('new_releases', 'New Releases'),
+    ('just_for_you', 'Just For You'),
+    ('trending_now', 'Trending Now'),
+]
+
 class Content(models.Model) :
     Titre = models.CharField(max_length=100)
     Description = models.CharField(max_length=300)
@@ -38,6 +48,7 @@ class Content(models.Model) :
     Trailer = models.URLField(null=True, blank=True)
     Poster = models.URLField(null=True, blank=True)
     Actors = models.ManyToManyField("Actor", blank=True)
+    is_popular = models.BooleanField(default=False)
 
     def __str__(self):
         return self.Titre
@@ -51,6 +62,7 @@ class Film(Content) :
     Video = models.URLField(null=True,blank=True)
     Duration = models.IntegerField()
     ReleaseDate = models.DateField()
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='popular')
 
 
 #Documentares and kids will be stock with film or movies
@@ -58,6 +70,7 @@ class Film(Content) :
 class Serie(Content) :
     type = models.CharField(max_length=20, choices=TYPES_CHOICES, default='series')
     Nb_season = models.IntegerField()
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='popular')
 
 
 class Season(models.Model):

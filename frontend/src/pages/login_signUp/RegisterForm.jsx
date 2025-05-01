@@ -19,7 +19,7 @@ const RegisterForm = ({
       </header>
 
       <main className="flex flex-col justify-center items-center w-[443px] max-w-md mx-auto max-md:w-[90%] max-sm:w-full">
-        <div className="w-full bg-white bg-opacity-10 rounded-[40px] p-8 backdrop-blur-sm">
+        <div className="w-full bg-opacity-20 bg-white rounded-[40px] p-8 backdrop-blur-sm">
 
           <form
           className="flex flex-col gap-5 items-center"
@@ -64,7 +64,7 @@ const RegisterForm = ({
               label={
                 <>
                   I have read and accept the Terms of
-                  <span> Service & Privacy Policy *
+                  <span>Service & Privacy Policy *
                   </span>
                 </>
               }

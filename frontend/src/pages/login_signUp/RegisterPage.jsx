@@ -14,6 +14,7 @@ const RegisterPage = () => {
   });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -45,13 +46,15 @@ const RegisterPage = () => {
   };
 
   return (
-    <RegisterForm
-      formData={formData}
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
-      acceptedTerms={acceptedTerms}
-      setAcceptedTerms={setAcceptedTerms}
-    />
+    
+      <RegisterForm
+        formData={formData}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        acceptedTerms={acceptedTerms}
+        setAcceptedTerms={setAcceptedTerms}
+      />
+   
   );
 };
 

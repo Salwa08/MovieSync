@@ -1,22 +1,22 @@
 "use client";
 import React from "react";
 
-const InputField = ({ placeholder, name, value, onChange }) => {
+const InputField = ({ placeholder, name, value, onChange, type}) => {
+    const inputType = type || (placeholder.toLowerCase().includes("password") ? "password" : "text");
+
   return (
-    <div className="relative w-[360px] h-[50px] max-sm:w-full">
+    <div className="relative w-full max-w-sm mb-1">
       <input
-        type={
-          placeholder.toLowerCase().includes("password") ? "password" : "text"
-        }
+        type={inputType}
         name={name}
         value={value}
         onChange={onChange}
-        className="w-full h-full rounded-lg bg-[#D9D9D9] bg-opacity-66 px-6 py-3 text-gray-800 font-semibold focus:outline-none"
+        className="w-full h-12 rounded-md bg-gray-200/80 px-4 py-3 text-gray-800 focus:outline-none"
         placeholder=""
         aria-label={placeholder}
       />
-      <span className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-500 font-semibold text-sm font-['Montserrat']">
-        {placeholder}
+      <span className="absolute left-4 top-8 transform -translate-y-1/2 text-gray-500 font-medium text-sm pointer-events-none">
+        {value ? "" : placeholder}
       </span>
     </div>
   );

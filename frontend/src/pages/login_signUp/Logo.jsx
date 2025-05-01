@@ -21,8 +21,7 @@ const Logo = () => {
           fontWeight="bold"
           letterSpacing="0em"
         >
-          <tspan x="62.9961" y="34.2969">
-            OVIESYNC
+          <tspan x="62.9961" y="34.2969">OVIESYNC
           </tspan>
         </text>
         <text

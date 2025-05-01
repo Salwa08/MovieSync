@@ -1,17 +1,36 @@
 "use client";
-import React from "react";
-import Logo from "./Logo";
 import LoginForm from "./LoginForm";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../api/auth";
 
 const LoginPage = () => {
-  return (
-    <main className="flex flex-col justify-center items-center mx-auto w-full max-w-none h-screen max-md:max-w-[991px] max-sm:max-w-screen-sm bg-black">
-      <header className="flex justify-center items-center py-6 pr-20 pl-14 w-full max-md:p-5 max-sm:p-4">
-        <Logo />
-      </header>
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-      <LoginForm />
-    </main>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      await login(email, password);
+      alert("Login successful!");
+      navigate("/home"); // Redirect to a dashboard or home page
+    } catch (err) {
+      setError(err.error || "Invalid credentials");
+    }
+  };
+  return (
+    <LoginForm
+      email={email}
+      password={password}
+      handleSubmit={handleSubmit} // Renamed from onSubmit to match LoginForm
+      error={error}
+      setEmail={setEmail} // Added setEmail prop
+      setPassword={setPassword} // Added setPassword prop
+    />
   );
 };
 

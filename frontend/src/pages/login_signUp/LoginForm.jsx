@@ -29,11 +29,11 @@ const LoginForm = ({
             Login
           </h1>
         <InputField
-          type="email"
-          placeholder="E-mail"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          placeholder="Username"
+          name="username"
+          value={email} // Reusing the email state for username
+          onChange={(e) => setEmail(e.target.value)} // Reusing setEmail for username
         />
 
         <InputField

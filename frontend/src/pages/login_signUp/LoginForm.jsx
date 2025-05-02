@@ -13,19 +13,19 @@ const LoginForm = ({
   setPassword,
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 to-red-950 flex flex-col justify-center items-center w-full">
-      <header className="absolute top-6 left-14 max-sm:left-5">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 to-red-950 flex flex-col justify-center items-center w-full px-4 max-sm:px-6">
+      <header className="absolute top-6 left-6 max-sm:left-10">
         <Logo />
       </header>
 
-      <main className="flex flex-col justify-center items-center w-[443px] max-w-md mx-auto max-md:w-[90%] max-sm:w-full">
-        <div className="w-full bg-opacity-10 bg-white rounded-[40px] p-8 backdrop-blur-sm">
+      <main className="w-full max-w-md flex flex-col items-center justify-center">
+        <div className="w-full bg-opacity-10 bg-white rounded-[40px] p-6 sm:p-8 backdrop-blur-sm">
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center gap-5"
+        className="flex flex-col items-center gap-y-4 sm:gap-y-5"
       >
-          <h1 className="text-2xl font-bold text-center text-white mb-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-center text-white mb-2">
             Login
           </h1>
         <InputField
@@ -55,15 +55,15 @@ const LoginForm = ({
 
         <button
           type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full font-medium transition-all mt-4"
+          className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-full font-medium transition-all mt-2"
         >
-          <span className="text-base font-bold text-center text-white uppercase">
+          <span className="text-sm sm:text-base font-bold text-center text-white uppercase">
             Sign in
           </span>
         </button>
       </form>
 
-      <div className="my-6 flex items-center w-full">
+      <div className="my-5 flex items-center ">
         <div className="flex-1 border-t border-gray-400/30"></div>
         <span className="px-4 text-sm text-white">or continue with</span>
         <div className="flex-1 border-t border-gray-400/30"></div>
@@ -77,7 +77,7 @@ const LoginForm = ({
 
       <div className="text-white text-sm mt-6 text-center">
         New to MovieSync?{" "}
-        <a href="/register" className="text-red-400 hover:underline">
+        <a href="/register" className="text-red-500 hover:underline">
           Sign up
         </a>
       </div>

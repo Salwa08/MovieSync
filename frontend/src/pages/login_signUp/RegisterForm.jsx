@@ -13,19 +13,19 @@ const RegisterForm = ({
   setAcceptedTerms,
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-900 to-red-950 flex flex-col justify-center items-center w-full">
-      <header className="absolute top-6 left-14 max-sm:left-5">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 to-red-950 flex flex-col justify-center items-center w-full px-4 max-sm:px-6">
+      <header className="absolute top-6 left-6 max-sm:left-6">
         <Logo />
       </header>
 
-      <main className="flex flex-col justify-center items-center w-[443px] max-w-md mx-auto max-md:w-[90%] max-sm:w-full">
-        <div className="w-full bg-opacity-20 bg-white rounded-[40px] p-8 backdrop-blur-sm">
+      <main className="w-full max-w-md flex flex-col items-center justify-center">
+        <div className="w-full bg-opacity-10 bg-white rounded-[40px] p-6 sm:p-8 backdrop-blur-sm">
 
           <form
-          className="flex flex-col gap-5 items-center"
+          className="flex flex-col gap-y-4 sm:gap-y-5 items-center"
           onSubmit={handleSubmit}
           >
-          <h1 className="text-2xl font-bold text-center text-white mb-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-center text-white mb-2">
             Register
           </h1>
 
@@ -56,23 +56,24 @@ const RegisterForm = ({
             onChange={handleChange}
           />
 
-          <div className="flex items-start w-full mt-2">
+          <div className="flex items-start w-full mt-1">
             <Checkbox
               htmlFor="terms"
               checked={acceptedTerms}
               onChange={(e) => setAcceptedTerms(e.target.checked)}
               label={
                 <>
-                  I have read and accept the Terms of
-                  <span>Service & Privacy Policy *
-                  </span>
-                </>
-              }
+                I have read and accept the{" "}
+                <span className="text-red-400 underline">
+                  Terms of Service & Privacy Policy *
+                </span>
+              </>
+            }
             />
           </div>
 
           <a href="/login" className="text-white hover:underline text-sm mt-2">
-            Already have account?
+            Already have an account?
           </a>
           <div className="mt-4 w-full flex justify-center">
           <Button type="submit">Continue</Button>

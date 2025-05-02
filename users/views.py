@@ -47,3 +47,18 @@ def login_api(request):
         }, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def check_email_existence(request):
+    email = request.data.get('email')
+
+    if not email:
+        return Response({'error': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    email_exists = User.objects.filter(email=email).exists()
+
+    if email_exists:
+        return Response({'message': 'A password reset link has been sent to your email.'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'error': 'Email does not exist in our records.'}, status=status.HTTP_404_NOT_FOUND)

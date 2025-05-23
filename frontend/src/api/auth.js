@@ -1,29 +1,136 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8000/users/api";
+const API_BASE_URL = "http://localhost:8000";
 
-export const register = async (username, email, password) => {
+// Create axios instance
+const api = axios.create({
+  baseURL: API_BASE_URL
+});
+
+// Request interceptor to add auth token to requests
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export const register = async (username, email, password, password2) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/register/`, {
+    console.log("Starting registration process");
+    console.log("Registration payload:", { 
+      username, 
+      email, 
+      password: "***", 
+      confirm_password: "***"
+    });
+    
+    const response = await api.post('users/api/register/', {
       username,
       email,
       password,
-      confirm_password: password,
+      confirm_password: password2
     });
+    
+    console.log("Registration API response:", response);
+    console.log("Registration successful, user data:", response.data);
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    console.error("Registration error details:", {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data
+    });
+    
+    // Extract detailed error message if available
+    let errorMessage = 'Registration failed';
+    if (error.response?.data) {
+      if (typeof error.response.data === 'string') {
+        errorMessage = error.response.data;
+      } else if (error.response.data.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.response.data.non_field_errors) {
+        errorMessage = error.response.data.non_field_errors[0];
+      } else {
+        // Try to extract specific field errors
+        const fieldErrors = Object.entries(error.response.data)
+          .map(([field, errors]) => {
+            if (Array.isArray(errors)) {
+              return `${field}: ${errors[0]}`;
+            }
+            return `${field}: ${errors}`;
+          })
+          .join(', ');
+          
+        if (fieldErrors) {
+          errorMessage = fieldErrors;
+        }
+      }
+    }
+    
+    throw { error: errorMessage };
   }
 };
 
-export const login = async (username, password) => {
+// Update the login function
+export const login = async (email, password) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/login/`, {
-      username,
-      password,
+    // If your backend expects username and you're using email as username
+    const response = await api.post('users/api/login/', {
+      username: email, // Using email in the username field
+      password: password
     });
+    
+    console.log("Login successful:", response.data);
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    console.error("Login error:", error.response?.data);
+    
+    let errorMessage = 'Invalid email or password';
+    if (error.response?.data?.error) {
+      errorMessage = error.response.data.error;
+    }
+    
+    throw { error: errorMessage };
+  }
+};
+
+export const getUserProfile = async () => {
+  try {
+    const response = await api.get('users/auth/profile/');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to fetch user profile' };
+  }
+};
+
+export const updateProfile = async (userData) => {
+  try {
+    const response = await api.patch('users/auth/profile/', userData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to update profile' };
+  }
+};
+
+export const postReview = async (movieId, reviewData) => {
+  try {
+    const response = await api.post(`/videos/films/${movieId}/reviews/`, reviewData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to post review' };
+  }
+};
+
+export const deleteReview = async (movieId, reviewId) => {
+  try {
+    const response = await api.delete(`/videos/films/${movieId}/reviews/${reviewId}/`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Failed to delete review' };
   }
 };

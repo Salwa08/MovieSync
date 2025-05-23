@@ -31,7 +31,7 @@ function MoviesPage() {
 
   const navigate = useNavigate();
   const handleMovieClick = (movie) => {
-    navigate(`/movies/${movie.id}`, { state: { movie } });
+    navigate(`/home/${movie.id}`, { state: { movie } });
   };
 
 

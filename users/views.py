@@ -1,7 +1,7 @@
 import logging
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -10,13 +10,14 @@ from .serializers import RegisterSerializer
 
 logger = logging.getLogger(__name__)
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def register_api(request):
-    logger.info("Register API called with data: %s", request.data)
+class RegisterAPI(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
 
-    serializer = RegisterSerializer(data=request.data)
-    if serializer.is_valid():
+    def post(self, request, *args, **kwargs):
+        logger.info("Register API called with data: %s", request.data)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         try:
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
@@ -27,23 +28,38 @@ def register_api(request):
         except Exception as e:
             logger.error("Error creating user: %s", str(e))
             return Response({'error': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        logger.error("Validation errors: %s", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_api(request):
-    username = request.data.get('username')
+    username_or_email = request.data.get('username') or request.data.get('email')
     password = request.data.get('password')
-
-    user = authenticate(username=username, password=password)
-
+    
+    logger.info(f"Login attempt with: {username_or_email}")
+    
+    # First try direct username authentication
+    user = authenticate(username=username_or_email, password=password)
+    
+    # If that fails, try to find a user with matching email
+    if user is None:
+        try:
+            # Look up the user with this email
+            user_obj = User.objects.get(email=username_or_email)
+            # Then authenticate with their username
+            user = authenticate(username=user_obj.username, password=password)
+        except User.DoesNotExist:
+            user = None
+    
     if user is not None:
         refresh = RefreshToken.for_user(user)
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email
+            }
         }, status=status.HTTP_200_OK)
     else:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)

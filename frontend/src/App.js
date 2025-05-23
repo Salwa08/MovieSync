@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RegisterPage from './pages/login_signUp/RegisterPage';
 import MoviesPage from './pages/MoviesPage';
 import LoginPage from './pages/login_signUp/LoginPage';
+import MovieDetails from './pages/movieDetails/movieDetailsPage';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/movies/" element={<MoviesPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/movies/:id" element={<MovieDetails />} />
 
         </Routes>
       </div>

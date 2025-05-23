@@ -68,10 +68,17 @@ const MovieHero = ({ movie, children, onNext, onPrevious }) => {
         </div>
       </div>
 
-      {/* Movie Selection Banner */}
-      <div className="absolute -bottom-2 md:-bottom-52 w-full">
+      <div className="absolute -bottom-2 md:-bottom-44 w-full ">
         <div className="container mx-auto px-3 md:px-10">
-          <div className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-4">
+          <div className="flex gap-4 overflow-x-auto scroll-smooth pb-4"
+            style={{
+                scrollbarWidth: "none",       
+                msOverflowStyle: "none"       
+              }}
+            >
+              <style>
+                {`div::-webkit-scrollbar { display: none; }`}
+              </style>
             {children}
           </div>
         </div>

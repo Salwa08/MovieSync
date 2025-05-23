@@ -13,6 +13,8 @@ import requests
 class FilmList(generics.ListAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
+    pagination_class = None  
+
 
 
 @api_view(['GET'])
@@ -76,3 +78,6 @@ def get_popular_movies(request):
         return Response(all_movies)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+    
+
+

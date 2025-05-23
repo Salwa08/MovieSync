@@ -29,3 +29,4 @@ class SerieSerializer(serializers.ModelSerializer):
 
 
 
+

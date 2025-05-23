@@ -8,7 +8,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faStar, faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 
-
+const scrollbarHideStyles = `
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+`;
 
 function MoviesPage() {
   const [movies, setMovies] = useState([]);
@@ -75,6 +86,7 @@ function MoviesPage() {
 
   return (
     <div className="text-white bg-black min-h-screen">
+      <style>{scrollbarHideStyles}</style>
       <Navbar />
       <div className="flex flex-col">
       {heroMovie && (
@@ -129,7 +141,7 @@ function MoviesPage() {
           </div>
 
           <div className="relative overflow-hidden">
-            <div className="flex h-72 gap-8 overflow-x-auto no-scrollbar snap-x snap-mandatory scrollbar-hide p-4">
+            <div className="flex h-72 gap-8 overflow-x-auto hide-scrollbar p-4">
               {nonPopularMovies.map((movie) => (
                 <div
                   key={movie.id}
@@ -160,7 +172,7 @@ function MoviesPage() {
           </div>
 
           <div className="relative overflow-hidden">
-            <div className="flex h-72 gap-8 overflow-x-auto no-scrollbar snap-x snap-mandatory scrollbar-hide p-4">
+            <div className="flex h-72 gap-8 overflow-x-auto hide-scrollbar p-4">
               {justforuMovies.map((movie) => (
                 <div
                   key={movie.id}
@@ -193,7 +205,7 @@ function MoviesPage() {
           </div>
 
           <div className="relative overflow-hidden">
-            <div className="flex h-72 gap-8 overflow-x-auto no-scrollbar snap-x snap-mandatory scrollbar-hide p-4">
+            <div className="flex h-72 gap-8 overflow-x-auto hide-scrollbar p-4">
               {new_releases.map((movie) => (
                 <div
                   key={movie.id}
@@ -224,7 +236,7 @@ function MoviesPage() {
           </div>
 
           <div className="relative overflow-hidden">
-            <div className="flex h-72 gap-8 overflow-x-auto no-scrollbar snap-x snap-mandatory scrollbar-hide p-4">
+            <div className="flex h-72 gap-8 overflow-x-auto hide-scrollbar p-4">
               {trending_now.map((movie) => (
                 <div
                   key={movie.id}

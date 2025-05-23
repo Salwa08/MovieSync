@@ -13,6 +13,7 @@ import requests
 class FilmList(generics.ListAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
+    pagination_class = None
 
 
 @api_view(['GET'])

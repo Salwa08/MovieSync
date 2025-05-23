@@ -6,6 +6,7 @@ import LoginPage from './pages/login_signUp/LoginPage';
 import MovieDetails from './pages/movieDetails/movieDetailsPage';
 import ForgotPasswordPage from './pages/login_signUp/ForgotPasswordPage';
 import InputDesign from './pages/LandingPage/InputDesign';
+import SearchPage from './pages/SearchPage/SearchPage';
 
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
           <Route path="/movies/:id" element={<MovieDetails />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/" element={<InputDesign />} />
+          <Route path="/search" element={<SearchPage />} />
+          {/* Add more routes as needed */}
 
         </Routes>
       </div>

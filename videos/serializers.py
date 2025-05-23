@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Film, Actor, Director
+from .models import Film, Serie
+
 
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,4 +20,12 @@ class FilmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Film
         fields = '__all__'
+
+class SerieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Serie
+        fields = '__all__'
+
+
+
 

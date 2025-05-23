@@ -23,6 +23,16 @@ function App() {
           <Route path="/home/:id" element={<MovieDetails />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/" element={<InputDesign />} />
+          <Route path="/home/" element={
+              <ProtectedRoute>
+                <MoviesPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/home/:id" element={
+              <ProtectedRoute>
+                <MovieDetails />
+              </ProtectedRoute>
+            } />
           <Route 
             path="/profile" 
             element={

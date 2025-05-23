@@ -79,13 +79,10 @@ export const register = async (username, email, password, password2) => {
 // Update the login function
 export const login = async (email, password) => {
   try {
-    // If your backend expects username and you're using email as username
     const response = await api.post('users/api/login/', {
-      username: email, // Using email in the username field
-      password: password
+      username: email, // If your backend expects username but you're using email in UI
+      password
     });
-    
-    console.log("Login successful:", response.data);
     return response.data;
   } catch (error) {
     console.error("Login error:", error.response?.data);

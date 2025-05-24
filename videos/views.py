@@ -1,11 +1,9 @@
 from rest_framework import generics, permissions, status
-from .models import Film
-from .serializers import FilmSerializer
+from .models import Film, Serie, Favourite, Review
+from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer, ReviewSerializer
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Film, Serie, Favourite
-from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer
 from django.conf import settings
 import requests
 
@@ -111,6 +109,59 @@ def remove_favourite(request, film_id):
         return Response({'success': True})
     except Favourite.DoesNotExist:
         return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class FilmReviewListCreateView(generics.ListCreateAPIView):
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]  # <-- THIS LINE
+
+    def get_queryset(self):
+        film_id = self.kwargs['film_id']
+        return Review.objects.filter(film_id=film_id).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        film = Film.objects.get(pk=self.kwargs['film_id'])
+        serializer.save(user=self.request.user, film=film)
+
+class ReviewDeleteView(generics.DestroyAPIView):
+    queryset = Review.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        # Only allow users to delete their own reviews
+        return Review.objects.filter(user=self.request.user)
+
+
+@api_view(['GET'])
+def movie_recommendations(request, film_id):
+    try:
+        movie = Film.objects.get(pk=film_id)
+        genres = movie.Genre if movie.Genre else []
+        print("Genres for movie:", genres)
+        
+        # Get all other films
+        all_films = Film.objects.exclude(id=film_id)
+        
+        # Manual comparison for matching genres
+        recommendations = []
+        for film in all_films:
+            film_genres = film.Genre if film.Genre else []
+            # Check if any genre matches (case insensitive)
+            if any(g.lower() in [x.lower() for x in film_genres] for g in genres):
+                recommendations.append(film)
+        
+        recommendations = recommendations[:30]  
+        print("Recommendations:", [f.Titre for f in recommendations])
+        
+        serializer = FilmSerializer(recommendations, many=True)
+        return Response(serializer.data)
+    except Film.DoesNotExist:
+        return Response({'error': 'Movie not found'}, status=404)
+
+class FilmDetail(generics.RetrieveAPIView):
+    queryset = Film.objects.all()
+    serializer_class = FilmSerializer
+    lookup_url_kwarg = 'film_id'
 
 
 

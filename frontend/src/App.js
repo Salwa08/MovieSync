@@ -24,7 +24,6 @@ function App() {
           <Route path="/" element={<InputDesign />} />
 
           <Route path="/search" element={<SearchPage />} />
-          {/* Add more routes as needed */}
           <Route path="/home/" element={
               <ProtectedRoute>
                 <MoviesPage />

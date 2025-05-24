@@ -7,7 +7,6 @@ const NavigationGuard = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Public routes that don't require authentication
   const publicRoutes = ['/', '/login', '/register', '/forgot-password'];
   
   useEffect(() => {

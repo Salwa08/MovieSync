@@ -14,20 +14,16 @@ export const UserProvider = ({ children }) => {
     const loadUser = async () => {
       setLoading(true);
       try {
-        // Check for token in localStorage
         const token = localStorage.getItem('authToken');
-        if (!token) {
-          setLoading(false);
-          return;
+        if (token) {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          // Get user profile with the token
+          const response = await axios.get('http://localhost:8000/admin/auth/user/');
+          setCurrentUser(response.data);
+          setIsAuthenticated(true);
+        } else {
+          delete axios.defaults.headers.common['Authorization'];
         }
-        
-        // Set the authorization header
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        
-        // Get user profile with the token
-        const response = await axios.get('http://localhost:8000/admin/auth/user/');
-        setCurrentUser(response.data);
-        setIsAuthenticated(true);
       } catch (error) {
         console.error("Failed to load user:", error);
         // Clear invalid token

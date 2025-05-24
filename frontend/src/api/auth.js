@@ -115,17 +115,23 @@ export const updateProfile = async (userData) => {
 };
 
 export const postReview = async (movieId, reviewData) => {
-  try {
-    const response = await api.post(`/videos/films/${movieId}/reviews/`, reviewData);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || { error: 'Failed to post review' };
-  }
+  const token = localStorage.getItem('authToken');
+  return (
+    await axios.post(
+      `http://localhost:8000/videos/films/${movieId}/reviews/`,
+      reviewData,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+  ).data;
 };
 
 export const deleteReview = async (movieId, reviewId) => {
+  const token = localStorage.getItem('authToken');
   try {
-    const response = await api.delete(`/videos/films/${movieId}/reviews/${reviewId}/`);
+    const response = await axios.delete(
+      `http://localhost:8000/videos/reviews/${reviewId}/`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Failed to delete review' };

@@ -12,8 +12,12 @@ const MovieRecommendations = ({ movieId }) => {
     }
 
     setLoading(true);
+    const token = localStorage.getItem("authToken");
     axios
-      .get(`http://localhost:8000/videos/films/${movieId}/recommendations/`)
+      .get(
+        `http://localhost:8000/videos/films/${movieId}/recommendations/`,
+        token ? { headers: { Authorization: `Bearer ${token}` } } : {}
+      )
       .then((res) => {
         setRecommendations(res.data);
         setLoading(false);
@@ -42,8 +46,8 @@ const MovieRecommendations = ({ movieId }) => {
 
   if (loading)
     return (
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4 text-white">Recommendations</h2>
+      <div className="">
+        
         <div className="grid grid-cols-4 gap-4">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="animate-pulse">

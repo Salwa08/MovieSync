@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
-import axios from 'axios';
-import MovieHeader from './movieHeader';
-import MovieCast from './movieCast';
-import MovieEpisodes from './movieEpisodes';
-import MovieReviews from './movieReviews';
-import MovieRecommendations from './movieRecommendations';
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import MovieHeader from "./movieHeader";
+import MovieCast from "./movieCast";
+import MovieEpisodes from "./movieEpisodes";
+import MovieReviews from "./movieReviews";
+import MovieRecommendations from "./movieRecommendations";
 
 const MovieDetails = () => {
-  const { id } = useParams();
   const { state } = useLocation();
   const movie = state?.movie;
-  const [activeTab, setActiveTab] = useState('cast');
-
+  const [activeTab, setActiveTab] = useState("cast");
 
   const tabContent = {
     cast: <MovieCast movie={movie} />,
     episodes: <MovieEpisodes movie={movie} />,
     reviews: <MovieReviews movie={movie} />,
-    recommendations: <MovieRecommendations movie={movie} />
+    recommendations: <MovieRecommendations movieId={movie?.id} />,
   };
 
   return (
@@ -94,8 +91,6 @@ const MovieDetails = () => {
           {tabContent[activeTab]}
         </div>
       </div>
-      
-      
     </>
   );
 };

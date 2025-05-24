@@ -1,53 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
-import MovieHeader from "./movieHeader";
-import MovieCast from "./movieCast";
-import MovieEpisodes from "./movieEpisodes";
-import MovieReviews from "./movieReviews";
-import MovieRecommendations from "./movieRecommendations";
+import React, { useState, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import axios from 'axios';
+import MovieHeader from './movieHeader';
+import MovieCast from './movieCast';
+import MovieEpisodes from './movieEpisodes';
+import MovieReviews from './movieReviews';
+import MovieRecommendations from './movieRecommendations';
 
 const MovieDetails = () => {
-  const { state } = useLocation();
   const { id } = useParams();
-  const [movie, setMovie] = useState(state?.movie || null);
-  const [loading, setLoading] = useState(!state?.movie);
-  const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("cast");
+  const { state } = useLocation();
+  const movie = state?.movie;
+  const [activeTab, setActiveTab] = useState('cast');
 
-  useEffect(() => {
-    async function fetchMovie() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`http://localhost:8000/videos/film/${id}/`);
-        if (!res.ok) throw new Error("Failed to fetch movie details");
-        const data = await res.json();
-        setMovie(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchMovie();
-    // eslint-disable-next-line
-  }, [id]);
 
   const tabContent = {
     cast: <MovieCast movie={movie} />,
     episodes: <MovieEpisodes movie={movie} />,
     reviews: <MovieReviews movie={movie} />,
-    recommendations: <MovieRecommendations movie={movie} />,
+    recommendations: <MovieRecommendations movie={movie} />
   };
-
-  if (loading)
-    return <div className="text-center py-10 text-gray-400">Loading...</div>;
-  if (error)
-    return <div className="text-center py-10 text-red-500">Error: {error}</div>;
-  if (!movie)
-    return (
-      <div className="text-center py-10 text-gray-400">Movie not found.</div>
-    );
 
   return (
     <>
@@ -122,6 +94,8 @@ const MovieDetails = () => {
           {tabContent[activeTab]}
         </div>
       </div>
+      
+      
     </>
   );
 };

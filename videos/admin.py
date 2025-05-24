@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Film, Serie, Season, Episode, Director, Actor, Favourite
+from .models import Film, Serie, Season, Episode, Director, Actor, Favourite, Review
 
 
 
@@ -44,6 +44,11 @@ class FavouriteAdmin(admin.ModelAdmin):
     list_filter = ('user',)
 
 
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('film', 'user', 'rating', 'created_at')
+    search_fields = ('film__Titre', 'user__username', 'comment')
+
+
 admin.site.register(Film, MovieAdmin)
 admin.site.register(Serie, SerieAdmin)
 admin.site.register(Season, SeasonAdmin)
@@ -51,6 +56,7 @@ admin.site.register(Episode, EpisodeAdmin)
 admin.site.register(Director, DirectorAdmin)
 admin.site.register(Actor, ActorAdmin)
 admin.site.register(Favourite, FavouriteAdmin)
+admin.site.register(Review, ReviewAdmin)
 
 
 

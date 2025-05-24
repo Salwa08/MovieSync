@@ -4,15 +4,15 @@ const API_BASE_URL = "http://localhost:8000";
 
 // Create axios instance
 const api = axios.create({
-  baseURL: API_BASE_URL
+  baseURL: API_BASE_URL,
 });
 
 // Request interceptor to add auth token to requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -22,20 +22,20 @@ api.interceptors.request.use(
 export const register = async (username, email, password, password2) => {
   try {
     console.log("Starting registration process");
-    console.log("Registration payload:", { 
-      username, 
-      email, 
-      password: "***", 
-      confirm_password: "***"
+    console.log("Registration payload:", {
+      username,
+      email,
+      password: "***",
+      confirm_password: "***",
     });
-    
-    const response = await api.post('users/api/register/', {
+
+    const response = await api.post("users/api/register/", {
       username,
       email,
       password,
-      confirm_password: password2
+      confirm_password: password2,
     });
-    
+
     console.log("Registration API response:", response);
     console.log("Registration successful, user data:", response.data);
     return response.data;
@@ -43,13 +43,13 @@ export const register = async (username, email, password, password2) => {
     console.error("Registration error details:", {
       status: error.response?.status,
       statusText: error.response?.statusText,
-      data: error.response?.data
+      data: error.response?.data,
     });
-    
+
     // Extract detailed error message if available
-    let errorMessage = 'Registration failed';
+    let errorMessage = "Registration failed";
     if (error.response?.data) {
-      if (typeof error.response.data === 'string') {
+      if (typeof error.response.data === "string") {
         errorMessage = error.response.data;
       } else if (error.response.data.error) {
         errorMessage = error.response.data.error;
@@ -64,70 +64,76 @@ export const register = async (username, email, password, password2) => {
             }
             return `${field}: ${errors}`;
           })
-          .join(', ');
-          
+          .join(", ");
+
         if (fieldErrors) {
           errorMessage = fieldErrors;
         }
       }
     }
-    
-    throw { error: errorMessage };
+
+    throw new Error(errorMessage);
   }
 };
 
 // Update the login function
 export const login = async (email, password) => {
   try {
-    const response = await api.post('users/api/login/', {
+    const response = await api.post("users/api/login/", {
       username: email, // If your backend expects username but you're using email in UI
-      password
+      password,
     });
     return response.data;
   } catch (error) {
     console.error("Login error:", error.response?.data);
-    
-    let errorMessage = 'Invalid email or password';
+
+    let errorMessage = "Invalid email or password";
     if (error.response?.data?.error) {
       errorMessage = error.response.data.error;
     }
-    
-    throw { error: errorMessage };
+
+    throw new Error(errorMessage);
   }
 };
 
 export const getUserProfile = async () => {
   try {
-    const response = await api.get('users/auth/profile/');
+    const response = await api.get("users/auth/profile/");
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'Failed to fetch user profile' };
+    throw error.response?.data || { error: "Failed to fetch user profile" };
   }
 };
 
 export const updateProfile = async (userData) => {
   try {
-    const response = await api.patch('users/auth/profile/', userData);
+    const response = await api.patch("users/auth/profile/", userData);
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'Failed to update profile' };
+    throw error.response?.data || { error: "Failed to update profile" };
   }
 };
 
 export const postReview = async (movieId, reviewData) => {
-  try {
-    const response = await api.post(`/videos/films/${movieId}/reviews/`, reviewData);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || { error: 'Failed to post review' };
-  }
+  const token = localStorage.getItem("authToken");
+  return (
+    await axios.post(
+      `http://localhost:8000/videos/films/${movieId}/reviews/`,
+      reviewData,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+  ).data;
 };
 
 export const deleteReview = async (movieId, reviewId) => {
+  const token = localStorage.getItem("authToken");
   try {
-    const response = await api.delete(`/videos/films/${movieId}/reviews/${reviewId}/`);
+    const response = await axios.delete(
+      `http://localhost:8000/videos/reviews/${reviewId}/`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'Failed to delete review' };
+    throw error.response?.data || { error: "Failed to delete review" };
   }
 };

@@ -22,7 +22,6 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/" element={<InputDesign />} />
             <Route path="/search" element={<SearchPage />} />
-            {/* Add more routes as needed */}
             <Route
               path="/home/"
               element={

@@ -14,7 +14,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Footer from "./LandingPage/Footer";
 import { useUser } from "../contexts/UserContext";
 
-
 const scrollbarHideStyles = `
   /* Hide scrollbar for Chrome, Safari and Opera */
   .hide-scrollbar::-webkit-scrollbar {

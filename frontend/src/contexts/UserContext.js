@@ -15,24 +15,29 @@ export const UserProvider = ({ children }) => {
     const loadUser = async () => {
       setLoading(true);
       try {
-        // Check for token in localStorage
-        const storedToken = localStorage.getItem("authToken");
-        if (!storedToken) {
-          setLoading(false);
-          setToken(null);
-          return;
-        }
-        setToken(storedToken);
-        // Set the authorization header
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${storedToken}`;
-        // Get user profile with the token
-        const response = await axios.get(
-          "http://localhost:8000/admin/auth/user/"
-        );
-        setCurrentUser(response.data);
-        setIsAuthenticated(true);
+const storedToken = localStorage.getItem("authToken");
+if (!storedToken) {
+  setLoading(false);
+  setToken(null);
+  delete axios.defaults.headers.common["Authorization"];
+  return;
+}
+setToken(storedToken);
+axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+try {
+  const response = await axios.get("http://localhost:8000/admin/auth/user/");
+  setCurrentUser(response.data);
+  setIsAuthenticated(true);
+} catch (error) {
+  // handle error, e.g., clear token and user state
+  localStorage.removeItem("authToken");
+  setToken(null);
+  delete axios.defaults.headers.common["Authorization"];
+  setCurrentUser(null);
+  setIsAuthenticated(false);
+} finally {
+  setLoading(false);
+}
       } catch (error) {
         console.error("Failed to load user:", error);
         // Clear invalid token

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 TYPES_CHOICES = [
     ('movie', 'Movie'),
@@ -107,4 +108,15 @@ class Actor(models.Model):
 
     def __str__(self):
         return self.Name
+
+class Favourite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    film = models.ForeignKey(Film, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'film')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.film.Titre}"
 

@@ -1,53 +1,104 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FaHeart } from "react-icons/fa";
 
-function MovieCard({ movie, onClick }) {
+function MovieCard({ movie, userToken }) {
+  const [hearted, setHearted] = useState(false);
+
+  // Optionally, fetch initial hearted state from a parent or context
+
+  const handleHeartClick = async (e) => {
+    e.preventDefault(); // Prevent navigating to movie page
+
+    if (!hearted) {
+      // Add to favourites
+      await fetch("/videos/favourites/add/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+        body: JSON.stringify({ film: movie.id }),
+      });
+      setHearted(true);
+    } else {
+      // Remove from favourites
+      await fetch(`/videos/favourites/remove/${movie.id}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+      setHearted(false);
+    }
+  };
+
   return (
-    <div
-      className="bg-neutral-900 rounded-xl overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 border-2 border-transparent hover:border-red-600 flex flex-col"
-      onClick={() => onClick && onClick(movie)}
-    >
-      <div className="relative w-full aspect-[2/3] bg-black flex items-center justify-center">
-        <img
-          src={
-            movie.Poster ||
-            movie.poster ||
-            "https://via.placeholder.com/200x300?text=No+Image"
-          }
-          alt={movie.Titre || movie.title}
-          className="w-full h-full object-cover object-center rounded-b-none"
-          style={{ boxShadow: "0 4px 24px 0 rgba(0,0,0,0.7)" }}
-        />
-        {/* Favorite/like icon could go here if needed */}
-      </div>
-      <div className="p-4 flex-1 flex flex-col justify-between">
-        <div>
-          <div className="text-xs text-neutral-400 mb-1">
-            {movie.country || movie.Country || "Unknown"}, {movie.release_year}
-          </div>
-          <h2 className="text-lg font-bold mb-2 text-white truncate">
-            {movie.Titre || movie.title}
-          </h2>
+    <div className="group h-full flex flex-col">
+      <Link to={`/movie/${movie.id}`} className="block h-full">
+        <div className="relative aspect-[2/3] overflow-hidden rounded-md mb-3 group-hover:scale-105 transition-transform w-full">
+          <img
+            src={
+              movie.Poster ||
+              movie.poster ||
+              (movie.poster_path
+                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                : "https://via.placeholder.com/250x370?text=No+Image")
+            }
+            alt={movie.Titre || movie.title}
+            className="object-cover w-full h-full"
+            style={{ minHeight: 200 }}
+          />
+          {/* Heart icon button, visible on hover */}
+          <button
+            className={`absolute top-2 right-2 rounded-full p-2 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 ${
+              hearted ? "bg-red-600" : "bg-neutral-800/80"
+            }`}
+            onClick={handleHeartClick}
+            aria-label={
+              hearted ? "Remove from favourites" : "Add to favourites"
+            }
+          >
+            <FaHeart
+              className={`h-5 w-5 transition-colors ${
+                hearted ? "text-white" : "text-gray-400"
+              }`}
+            />
+          </button>
         </div>
-        <div className="flex items-center gap-2 mb-1">
-          {movie.imdb_rating && (
-            <span className="bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded mr-2">
+      </Link>
+      <div className="flex-1 flex flex-col justify-between space-y-1">
+        <div className="text-xs text-gray-400 font-bold min-h-[18px] flex items-center">
+          {movie.ReleaseDate
+            ? new Date(movie.ReleaseDate).getFullYear()
+            : movie.release_year || "-"}
+        </div>
+        <h3 className="font-bold text-lg line-clamp-2 min-h-[48px] flex items-center">
+          {movie.Titre || movie.title}
+        </h3>
+        <div className="flex justify-between items-center min-h-[28px]">
+          <div className="flex items-center gap-2">
+            <div className="bg-yellow-400 text-black text-xs px-1 rounded font-bold">
               IMDb
+            </div>
+            <span className="text-xs font-bold">
+              {movie.Imdb || movie.imdb_rating || "-"} / 10
             </span>
-          )}
-          {movie.imdb_rating && (
-            <span className="text-xs text-white font-semibold">
-              {movie.imdb_rating} / 100
-            </span>
-          )}
+          </div>
+          {/* Tomato score, if available */}
           {movie.rt_rating && (
-            <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-red-400">
-              <span className="inline-block w-3 h-3 bg-red-500 rounded-full"></span>
-              {movie.rt_rating}%
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span>
+              <span className="text-xs font-bold text-gray-300">
+                {movie.rt_rating}%
+              </span>
+            </div>
           )}
         </div>
-        <div className="text-xs text-neutral-300 truncate">
-          {movie.genre || movie.Genre || "Unknown"}
+        <div className="text-xs text-gray-400 font-bold min-h-[18px] flex items-center">
+          {Array.isArray(movie.Genre)
+            ? movie.Genre.join(", ")
+            : movie.genre || movie.Genre || "Unknown"}
         </div>
       </div>
     </div>

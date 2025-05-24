@@ -16,9 +16,9 @@ function App() {
         <Routes>
           {/* <Route path="/" element={<RegisterPage />} /> */}
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/movies/" element={<MoviesPage />} />
+          <Route path="/home" element={<MoviesPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/movies/:id" element={<MovieDetails />} />
+          <Route path="/home/:id" element={<MovieDetails />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/" element={<InputDesign />} />
           <Route path="/search" element={<SearchPage />} />

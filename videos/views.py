@@ -1,11 +1,11 @@
-from rest_framework import generics
+from rest_framework import generics, permissions, status
 from .models import Film
 from .serializers import FilmSerializer
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import Film, Serie
-from .serializers import FilmSerializer, SerieSerializer
+from .models import Film, Serie, Favourite
+from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer
 from django.conf import settings
 import requests
 
@@ -29,21 +29,24 @@ def search_content(request):
     release_year = request.GET.get('release_year', None)
     rating = request.GET.get('rating', None)
 
-    if not query:
-        return Response({'error': 'Query parameter is required.'}, status=400)
+    # Only return error if ALL filters are empty
+    if not (query or genre or release_year or rating):
+        return Response({'error': 'At least one search parameter is required.'}, status=400)
 
-    
-    films = Film.objects.filter(title__icontains=query)
-    series = Serie.objects.filter(title__icontains=query)
+    films = Film.objects.all()
+    series = Serie.objects.all()
+    if query:
+        films = films.filter(Titre__icontains=query)
+        series = series.filter(Titre__icontains=query)
     if genre:
-            films = films.filter(genre__icontains=genre)
-            series = series.filter(genre__icontains=genre)
+        films = films.filter(Genre__icontains=genre)
+        series = series.filter(Genre__icontains=genre)
     if release_year:
-            films = films.filter(release_year=release_year)
-            series = series.filter(release_year=release_year)
+        films = films.filter(ReleaseDate__startswith=release_year)
+        
     if rating:
-            films = films.filter(rating__gte=rating)
-            series = series.filter(rating__gte=rating)
+        films = films.filter(Imdb__gte=rating)
+        series = series.filter(Imdb__gte=rating)
 
 
     film_serializer = FilmSerializer(films, many=True).data
@@ -77,3 +80,37 @@ def get_popular_movies(request):
         return Response(all_movies)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def list_favourites(request):
+    favourites = Favourite.objects.filter(user=request.user)
+    serializer = FavouriteSerializer(favourites, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def add_favourite(request):
+    film_id = request.data.get('film')
+    if not film_id:
+        return Response({'error': 'film id required'}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        film = Film.objects.get(id=film_id)
+    except Film.DoesNotExist:
+        return Response({'error': 'Film not found'}, status=status.HTTP_404_NOT_FOUND)
+    fav, created = Favourite.objects.get_or_create(user=request.user, film=film)
+    serializer = FavouriteSerializer(fav)
+    return Response(serializer.data, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def remove_favourite(request, film_id):
+    try:
+        fav = Favourite.objects.get(user=request.user, film_id=film_id)
+        fav.delete()
+        return Response({'success': True})
+    except Favourite.DoesNotExist:
+        return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+

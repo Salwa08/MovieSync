@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Film, Actor, Director
 from .models import Film, Serie
+from .models import Favourite
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -25,6 +26,12 @@ class SerieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Serie
         fields = '__all__'
+
+class FavouriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favourite
+        fields = ['id', 'user', 'film', 'added_at']
+
 
 
 

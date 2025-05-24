@@ -13,7 +13,10 @@ const NavIcons = () => {
       >
         <CiSearch className="text-white w-6 h-6" />
       </button>
-      <button className="focus:outline-none focus:ring-2 focus:ring-white rounded-full p-2">
+      <button
+        className="focus:outline-none focus:ring-2 focus:ring-white rounded-full p-2"
+        onClick={() => navigate("/profile")}
+      >
         <BsFillPersonFill className="text-white w-6 h-6" />
       </button>
     </div>

@@ -8,6 +8,7 @@ from .models import Film, Serie, Favourite
 from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer
 from django.conf import settings
 import requests
+from rest_framework.generics import RetrieveAPIView
 
 
 class FilmList(generics.ListAPIView):
@@ -111,6 +112,11 @@ def remove_favourite(request, film_id):
         return Response({'success': True})
     except Favourite.DoesNotExist:
         return Response({'error': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
+
+class FilmDetail(generics.RetrieveAPIView):
+    queryset = Film.objects.all()
+    serializer_class = FilmSerializer
+    lookup_field = 'id'
 
 
 

@@ -18,29 +18,30 @@ function App() {
       <div className="App">
         <Routes> 
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/home/" element={<MoviesPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/home/:id" element={<MovieDetails />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/" element={<InputDesign />} />
+          
           <Route path="/home/" element={
               <ProtectedRoute>
                 <MoviesPage />
               </ProtectedRoute>
             } />
-            <Route path="/home/:id" element={
-              <ProtectedRoute>
-                <MovieDetails />
-              </ProtectedRoute>
-            } />
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute>
-                <ProfilePage />
-              </ProtectedRoute>
-            } 
-          />
+
+          <Route path="/home/:id" element={
+            <ProtectedRoute>
+              <MovieDetails />
+            </ProtectedRoute>
+          } />
+
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } 
+            />
 
         </Routes>
       </div>

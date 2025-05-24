@@ -5,8 +5,6 @@ import { FaHeart } from "react-icons/fa";
 function MovieCard({ movie, userToken }) {
   const [hearted, setHearted] = useState(false);
 
-  // Optionally, fetch initial hearted state from a parent or context
-
   const handleHeartClick = async (e) => {
     e.preventDefault(); // Prevent navigating to movie page
 
@@ -44,7 +42,7 @@ function MovieCard({ movie, userToken }) {
 
   return (
     <div className="group h-full flex flex-col">
-      <Link to={`/movie/${movie.id}`} className="block h-full">
+      <Link to={`/film/${movie.id}`} state={{ movie }} className="block h-full">
         <div className="relative aspect-[2/3] overflow-hidden rounded-md mb-3 group-hover:scale-105 transition-transform w-full">
           <img
             src={

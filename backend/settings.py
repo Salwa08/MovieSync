@@ -148,6 +148,13 @@ load_dotenv()
 TMDB_API_KEY = os.getenv('d0d4b33791fab1f5e75924ccb1f14603')
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    # AllowAny globally, but protected endpoints use @permission_classes([IsAuthenticated])
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 50,  # Increased the default limit to 50
+    'PAGE_SIZE': 50,
 }

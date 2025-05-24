@@ -12,6 +12,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "./LandingPage/Footer";
+import { useUser } from "../contexts/UserContext";
+
 
 const scrollbarHideStyles = `
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -34,12 +36,18 @@ function MoviesPage() {
   const [new_releases, setNewReleases] = useState([]);
   const [trending_now, setTrendingNow] = useState([]);
 
+  const { isAuthenticated } = useUser();
   const navigate = useNavigate();
+
   const handleMovieClick = (movie) => {
     navigate(`/home/${movie.id}`, { state: { movie } });
   };
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+    
     axios
       .get("http://localhost:8000/videos/films/")
       .then((response) => {
@@ -68,7 +76,7 @@ function MoviesPage() {
       .catch((error) => {
         console.error("Failed to fetch movies:", error.message);
       });
-  }, []);
+  }, [isAuthenticated, navigate]);
 
   const handleSelectMovie = (movie) => {
     setHeroMovie(movie);

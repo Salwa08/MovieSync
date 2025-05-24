@@ -1,35 +1,42 @@
-"use client";
-import LoginForm from "./LoginForm";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../../api/auth";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/auth';
+import { useUser } from '../../contexts/UserContext';
+import LoginForm from './LoginForm';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const { loginUser } = useUser();
+  
+  // Use individual state variables instead of formData object
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-
+    
     try {
-      await login(email, password);
-      alert("Login successful!");
-      navigate("/home"); // Redirect to a dashboard or home page
-    } catch (err) {
-      setError(err.error || "Invalid credentials");
+      const response = await login(email, password);
+      
+      // Store user data and token in context
+      loginUser(response.user, response.token);
+      
+      // Redirect to home page
+      navigate('/home');
+    } catch (error) {
+      setError(error.error || 'Login failed. Please check your credentials.');
     }
   };
+
   return (
     <LoginForm
       email={email}
       password={password}
-      handleSubmit={handleSubmit} // Renamed from onSubmit to match LoginForm
+      setEmail={setEmail}
+      setPassword={setPassword}
       error={error}
-      setEmail={setEmail} // Added setEmail prop
-      setPassword={setPassword} // Added setPassword prop
+      handleSubmit={handleSubmit}
     />
   );
 };

@@ -13,7 +13,8 @@ const RegisterPage = () => {
     password2: "",
   });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -22,39 +23,60 @@ const RegisterPage = () => {
     });
   };
 
+  // MAKE SURE THIS FUNCTION IS COMPLETE
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!acceptedTerms) {
-      alert("Please accept the Terms of Service & Privacy Policy");
+    // Validation
+    if (formData.password !== formData.password2) {
+      setError("Passwords do not match");
       return;
     }
 
-    if (formData.password !== formData.password2) {
-      alert("Passwords don't match");
+    if (!acceptedTerms) {
+      setError("Please accept the terms and conditions");
       return;
     }
+
+    setLoading(true);
+    setError("");
 
     try {
-      await register(formData.username, formData.email, formData.password);
-      alert("Registration successful!");
-      console.log("Navigating to login page..."); // Debugging redirection
+      console.log("Attempting registration with:", {
+        username: formData.username,
+        email: formData.email,
+        password: "***",
+      });
+
+      const response = await register(
+        formData.username,
+        formData.email,
+        formData.password,
+        formData.password2
+      );
+
+      console.log("Registration successful!", response);
+
+      // On success, redirect to login
       navigate("/login");
     } catch (error) {
-      alert(`Registration failed: ${error.error || "Unknown error"}`);
+      console.error("Registration error:", error);
+      setError(error.error || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    
-      <RegisterForm
-        formData={formData}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        acceptedTerms={acceptedTerms}
-        setAcceptedTerms={setAcceptedTerms}
-      />
-   
+    <RegisterForm
+      formData={formData}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      acceptedTerms={acceptedTerms}
+      setAcceptedTerms={setAcceptedTerms}
+      error={error}
+      loading={loading}
+    />
   );
 };
 

@@ -25,6 +25,8 @@ function SearchPage() {
   const [showFilter, setShowFilter] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
+  const userToken = localStorage.getItem("authToken");
+
   // Handler to be passed to Filter for searching
   const handleSearch = async (params) => {
     setLoading(true);
@@ -110,7 +112,7 @@ function SearchPage() {
         clearSearch={clearSearch}
         Button={Button}
         Link={Link}
-        MovieCard={MovieCard}
+        MovieCard={(props) => <MovieCard {...props} userToken={userToken} />}
       />
       <Footer />
     </div>

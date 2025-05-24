@@ -11,9 +11,6 @@ import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import SearchPage from './pages/SearchPage/SearchPage';
 
-import SearchPage from './pages/SearchPage/SearchPage';
-import ProfilePage from './pages/ProfilePage';
-import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -22,10 +19,7 @@ function App() {
       <div className="App">
         <Routes> 
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/home" element={<MoviesPage />} />
-          <Route path="/home/" element={<MoviesPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/home/:id" element={<MovieDetails />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/" element={<InputDesign />} />
           <Route path="/search" element={<SearchPage />} />

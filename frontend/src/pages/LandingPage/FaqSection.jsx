@@ -12,7 +12,7 @@ function FaqSection() {
     {
       number: "02",
       question: "How much does MovieSync cost?",
-      answer: "MovieSync offers three different subscription plans: Basic ($9.99/month), Standard ($12.99/month), and Premium ($15.99/month). The Basic plan allows streaming on one device, Standard allows streaming on two devices simultaneously, and Premium allows streaming on up to four devices with Ultra HD available.",
+      answer: "MovieSync offers three different subscription plans: Basic (49.99MAD/month), Standard (69.99MAD/month), and Premium (89.99MAD/month). The Basic plan allows streaming on one device, Standard allows streaming on two devices simultaneously, and Premium allows streaming on up to four devices with Ultra HD available.",
       isOpen: false,
     },
     {

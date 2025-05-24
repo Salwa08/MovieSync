@@ -60,7 +60,7 @@ def search_content(request):
 
 # this view is used to fetch popular movies from TMDB API
 # and return them to the frontend
-@api_view(['GET'])
+@api_view(["GET"])
 def get_popular_movies(request):
     api_key = "d0d4b33791fab1f5e75924ccb1f14603"  
     base_url = "https://api.themoviedb.org/3/movie/popular"

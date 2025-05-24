@@ -12,7 +12,7 @@ function MovieCard({ movie, userToken }) {
 
     if (!hearted) {
       // Add to favourites
-      await fetch("/videos/favourites/add/", {
+      const res = await fetch("http://localhost:8000/videos/favourites/add/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,16 +20,25 @@ function MovieCard({ movie, userToken }) {
         },
         body: JSON.stringify({ film: movie.id }),
       });
-      setHearted(true);
+      const data = await res.json();
+      console.log("Add favourite response:", res.status, data);
+      if (res.ok) setHearted(true);
+      else alert(data.error || "Failed to add favourite");
     } else {
       // Remove from favourites
-      await fetch(`/videos/favourites/remove/${movie.id}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-      setHearted(false);
+      const res = await fetch(
+        `http://localhost:8000/videos/favourites/remove/${movie.id}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+      const data = await res.json();
+      console.log("Remove favourite response:", res.status, data);
+      if (res.ok) setHearted(false);
+      else alert(data.error || "Failed to remove favourite");
     }
   };
 

@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../navbar/Navbar";
 import { FaClock, FaFilm, FaUserTie, FaUsers, FaTv, FaCalendar } from 'react-icons/fa';
 
-const movieHeader = ({movie}) => {
+const MovieHeader = ({ movie }) => {
+  const [showTrailer, setShowTrailer] = useState(false);
+
   const formatDuration = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     return `${hours}h ${remainingMinutes}min`;
   };
+
+  // Add this guard clause at the beginning of your component
+  if (!movie) {
+    return (
+      <div className="h-[70vh] bg-gray-900 animate-pulse flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="text-white bg-black min-h-screen">
@@ -89,8 +100,33 @@ const movieHeader = ({movie}) => {
           </div>
         </div>
       </div>
+
+      {/* Trailer modal - only render if movie.Trailer exists */}
+      {showTrailer && movie.Trailer && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="relative w-full max-w-5xl">
+            <button
+              onClick={() => setShowTrailer(false)}
+              className="absolute -top-10 right-0 text-white text-xl hover:text-gray-300"
+            >
+              Close
+            </button>
+            <div className="aspect-video">
+              <iframe
+                width="100%"
+                height="100%"
+                src={movie.Trailer}
+                title={`${movie.Titre} Trailer`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default movieHeader;
+export default MovieHeader;

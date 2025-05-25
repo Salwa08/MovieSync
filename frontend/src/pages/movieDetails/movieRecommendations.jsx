@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MovieRecommendations = ({ movieId }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!movieId) {
@@ -12,13 +14,10 @@ const MovieRecommendations = ({ movieId }) => {
     }
 
     setLoading(true);
-    const token = localStorage.getItem("authToken");
     axios
-      .get(
-        `http://localhost:8000/videos/films/${movieId}/recommendations/`,
-        token ? { headers: { Authorization: `Bearer ${token}` } } : {}
-      )
+      .get(`http://localhost:8000/videos/films/${movieId}/recommendations/`)
       .then((res) => {
+        console.log("Recommendations loaded:", res.data);
         setRecommendations(res.data);
         setLoading(false);
       })
@@ -30,8 +29,9 @@ const MovieRecommendations = ({ movieId }) => {
   }, [movieId]);
 
   const handleMovieClick = (movie) => {
-    // Force a fresh page load to ensure we get new data
-    window.location.href = `/home/${movie.id}`;
+    console.log("Clicked on recommendation:", movie.id);
+    // Use navigate instead of window.location for better UX
+    navigate(`/home/${movie.id}`);
   };
 
   const chunkArray = (array, chunkSize) => {

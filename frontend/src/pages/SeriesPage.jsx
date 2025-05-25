@@ -28,7 +28,7 @@ function SeriesPage() {
   const navigate = useNavigate();
 
   const handleSeriesClick = (serie) => {
-    navigate(`/series/${serie.id}`, { state: { serie } });
+    navigate(`/series/${serie.id}`, { state: { movie: serie } });
   };
 
   useEffect(() => {

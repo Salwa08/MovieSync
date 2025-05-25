@@ -21,7 +21,8 @@ const MovieDetails = (props) => {
   if (props.isSerie) type = "series";
   else if (movie?.type) type = movie.type;
   else if (window.location.pathname.includes("series")) type = "series";
-  else if (window.location.pathname.includes("documentary")) type = "documentary";
+  else if (window.location.pathname.includes("documentary"))
+    type = "documentary";
   else if (window.location.pathname.includes("kids")) type = "kids";
   else type = "movie";
 
@@ -34,9 +35,13 @@ const MovieDetails = (props) => {
     }
   }, [state]);
 
-  // Always fetch fresh data when params.id changes
+  // Always fetch fresh data when params.id changes, but only if state.movie is not present
   useEffect(() => {
     if (!params.id) return;
+    if (state?.movie) return; // Don't fetch if we already have the movie from navigation
+
+    // If we have state.movie, clear any previous error
+    if (state?.movie && error) setError(null);
 
     console.log(`Fetching movie with ID: ${params.id}`);
     setLoading(true);
@@ -60,13 +65,24 @@ const MovieDetails = (props) => {
       })
       .catch((err) => {
         console.error("Error fetching movie details:", err);
-        setError("Failed to load movie details");
+        // Only show error if we don't have state.movie
+        if (!state?.movie) {
+          setError("Failed to load movie details");
+        } else {
+          setError(null); // If we have state.movie, clear error
+        }
         setLoading(false);
       });
-  }, [params.id, type]); // Remove 'movie' from dependencies to prevent conflicts
+  }, [params.id, type, state]); // Remove 'movie' from dependencies to prevent conflicts
 
   // Debug logs
-  console.log("MovieDetails state:", { loading, error, movie, activeTab, type });
+  console.log("MovieDetails state:", {
+    loading,
+    error,
+    movie,
+    activeTab,
+    type,
+  });
 
   if (loading) {
     return (

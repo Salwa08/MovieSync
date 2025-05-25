@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'; // Add this import for useNavigate
+import { Play } from 'lucide-react'; // Add this import for Play icon
 import Navbar from "../navbar/Navbar";
 import { FaClock, FaFilm, FaUserTie, FaUsers, FaTv, FaCalendar } from 'react-icons/fa';
 
 const MovieHeader = ({ movie }) => {
+  const navigate = useNavigate(); // Initialize the navigate function
   const [showTrailer, setShowTrailer] = useState(false);
 
   const formatDuration = (minutes) => {
@@ -89,12 +92,13 @@ const MovieHeader = ({ movie }) => {
                   </a>
                 
                 
-                  <a 
-                    href={movie.Video} 
-                    className="bg-white text-black hover:bg-gray-200 px-6 py-3 rounded-full font-semibold transition-colors"
+                  <button
+                    onClick={() => navigate(`/watch/${movie.id}`)}
+                    className="bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700 transition flex items-center"
                   >
-                    ▶ Play Now
-                  </a>
+                    <Play size={20} className="mr-2" />
+                    Play Now
+                  </button>
               </div>
             </div>
           </div>

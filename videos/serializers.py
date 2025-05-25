@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from .models import Film, Actor, Director
-from .models import Film, Serie
+from .models import Serie
 from .models import Favourite
-from .models import Review
+from .models import Review, VideoQuality
 
 
 class ActorSerializer(serializers.ModelSerializer):
@@ -15,9 +15,12 @@ class DirectorSerializer(serializers.ModelSerializer):
         model = Director
         fields = '__all__'
 
+
+
 class FilmSerializer(serializers.ModelSerializer):
     Actors = ActorSerializer(many=True, read_only=True)
     Director = DirectorSerializer(read_only=True)
+
 
     class Meta:
         model = Film
@@ -49,4 +52,16 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 
+class VideoQualitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoQuality
+        fields = ['quality', 'video_url']
 
+
+class FilmStreamSerializer(serializers.ModelSerializer):
+    qualities = VideoQualitySerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Film
+        # Change 'video_url' to 'Video' to match your model field name
+        fields = ['id', 'Titre', 'Poster', 'Video', 'Duration', 'qualities']

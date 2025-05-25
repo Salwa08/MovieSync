@@ -27,14 +27,12 @@ const MovieHero = ({ movie, children, onNext, onPrevious }) => {
           <IoChevronBackOutline size={30} />
         </button>
 
-        <Link to="/profile">
           <button
             className="hidden md:block absolute right-10 top-1/2 z-40 bg-black/50 p-4 rounded-full hover:bg-black/75 transition-all duration-300"
             onClick={onNext}
           >
             <IoChevronForwardOutline size={30} />
           </button>
-        </Link>
 
         <div className="absolute left-4 top-20 md:left-20 right-0 p-10 bg-gradient-to-t from-black to-transparent ">
           <div className="max-w-2xl ">

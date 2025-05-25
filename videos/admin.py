@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Film, Serie, Season, Episode, Director, Actor, Favourite, Review
 
+from .models import VideoQuality
 
 
 
@@ -48,6 +49,9 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('film', 'user', 'rating', 'created_at')
     search_fields = ('film__Titre', 'user__username', 'comment')
 
+class VideoQualityAdmin(admin.ModelAdmin):
+    list_display = ('quality', 'video_url')
+    search_fields = ('quality', 'video_url')
 
 admin.site.register(Film, MovieAdmin)
 admin.site.register(Serie, SerieAdmin)
@@ -57,6 +61,8 @@ admin.site.register(Director, DirectorAdmin)
 admin.site.register(Actor, ActorAdmin)
 admin.site.register(Favourite, FavouriteAdmin)
 admin.site.register(Review, ReviewAdmin)
+
+admin.site.register(VideoQuality, VideoQualityAdmin)
 
 
 

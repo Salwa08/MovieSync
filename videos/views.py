@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, status
-from .models import Film, Serie, Favourite, Review
-from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer, ReviewSerializer
+from .models import Film, Serie, Favourite, Review, VideoQuality
+from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer, ReviewSerializer, VideoQualitySerializer, FilmStreamSerializer
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -168,6 +168,32 @@ class FilmDetail(generics.RetrieveAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
     lookup_url_kwarg = 'film_id'
+
+
+@api_view(['GET'])
+def get_video_stream(request, film_id):
+    """Get a film with all available video qualities"""
+    try:
+        film = Film.objects.get(pk=film_id)
+        serializer = FilmStreamSerializer(film)
+        return Response(serializer.data)
+    except Film.DoesNotExist:
+        return Response({'error': 'Film not found'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def add_video_quality(request, film_id):
+    """Add a new video quality to a film"""
+    try:
+        film = Film.objects.get(pk=film_id)
+        
+        # Create serializer with request data
+        serializer = VideoQualitySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(film=film)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Film.DoesNotExist:
+        return Response({'error': 'Film not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

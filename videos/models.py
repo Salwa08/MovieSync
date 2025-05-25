@@ -130,3 +130,22 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.film.Titre} ({self.rating})"
 
+
+class VideoQuality(models.Model):
+    QUALITY_CHOICES = [
+        ('480p', '480p'),
+        ('720p', '720p'),
+        ('1080p', '1080p'),
+        ('4K', '4K'),
+    ]
+    
+    film = models.ForeignKey('Film', related_name='qualities', on_delete=models.CASCADE)
+    quality = models.CharField(max_length=10, choices=QUALITY_CHOICES)
+    video_url = models.URLField()
+    
+    class Meta:
+        unique_together = ('film', 'quality')
+        verbose_name_plural = 'Video Qualities'
+
+    def __str__(self):
+        return f"{self.film.Titre} - {self.quality}"

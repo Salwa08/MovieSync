@@ -1,0 +1,30 @@
+.slider {
+  -webkit-appearance: none;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #dc2626;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #dc2626;
+  cursor: pointer;
+  border: none;
+}
+
+.fullscreen video {
+  object-fit: contain;
+}

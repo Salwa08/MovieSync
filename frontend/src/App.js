@@ -10,6 +10,7 @@ import InputDesign from "./pages/LandingPage/InputDesign";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SearchPage from "./pages/SearchPage/SearchPage";
+import VideoPlayerPage from "./pages/videoPlayer/VideoPlayerPage";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
               }
             />
             <Route path="/film/:id" element={<MovieDetails />} />
+            <Route path="/watch/:id" element={<VideoPlayerPage />} />
           </Routes>
         </div>
       </UserProvider>

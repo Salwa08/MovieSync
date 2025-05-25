@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import FilmList, popular_movies, search_content, get_popular_movies, list_favourites, add_favourite, remove_favourite, FilmDetail, FilmReviewListCreateView, ReviewDeleteView, movie_recommendations    
+from .views import FilmList, popular_movies, search_content, get_popular_movies, list_favourites, add_favourite, remove_favourite, FilmDetail, FilmReviewListCreateView, ReviewDeleteView, movie_recommendations , get_video_stream, add_video_quality  
 
 urlpatterns = [
     path('films/', FilmList.as_view(), name='Film-list'),
@@ -14,5 +14,7 @@ urlpatterns = [
     path('films/<int:film_id>/reviews/', FilmReviewListCreateView.as_view(), name='film-reviews'),
     path('reviews/<int:pk>/', ReviewDeleteView.as_view(), name='review-delete'),
     path('films/<int:film_id>/recommendations/', movie_recommendations, name='movie-recommendations'),
+    path('films/<int:film_id>/stream/', get_video_stream, name='video-stream'),
+    path('films/<int:film_id>/quality/', add_video_quality, name='add-video-quality'),
 ]
 

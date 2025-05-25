@@ -181,7 +181,7 @@ const VideoPlayerPage = () => {
       videoElement.removeEventListener('canplay', onCanPlay);
       videoElement.removeEventListener('error', onError);
     };
-  }, [videoRef.current]);
+  }, [videoRef]);
   
   // Handle auto-hiding controls
   useEffect(() => {

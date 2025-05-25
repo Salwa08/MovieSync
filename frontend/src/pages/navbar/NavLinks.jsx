@@ -1,18 +1,30 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
+
+const links = [
+  { name: "Movies", path: "/films" },
+  { name: "Series", path: "/series" },
+  { name: "Documentary", path: "/documentary" },
+  { name: "Sports", path: "/sports" },
+  { name: "Kids", path: "/kids" },
+];
 
 const NavLinks = () => {
-  const links = ["Movies", "Series", "Documentary", "Sports", "Kids"];
-
+  const location = useLocation();
   return (
     <nav className="hidden md:flex gap-12 ">
       {links.map((link, index) => (
-        <a
+        <Link
           key={index}
-          href={`#${link.toLowerCase()}`}
-          className="text-xl font-extralight text-white  max-md:text-lg hover:text-red-800 transition-colors visited:text-red-800"
+          to={link.path}
+          className={`text-xl font-extralight max-md:text-lg transition-colors ${
+            location.pathname === link.path
+              ? "text-red-800"
+              : "text-white hover:text-red-800"
+          }`}
         >
-          {link}
-        </a>
+          {link.name}
+        </Link>
       ))}
     </nav>
   );

@@ -7,50 +7,66 @@ import MovieEpisodes from "./movieEpisodes";
 import MovieReviews from "./movieReviews";
 import MovieRecommendations from "./movieRecommendations";
 
-const MovieDetails = () => {
-  const { id } = useParams(); // Get the ID from URL params instead of state
+const MovieDetails = (props) => {
+  const { state } = useLocation();
+  const params = useParams();
+  // Force null initial state to ensure loading on navigation
   const [movie, setMovie] = useState(null);
-  const [activeTab, setActiveTab] = useState("cast");
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("cast");
   const [error, setError] = useState(null);
 
+  // Determine type from props, state, or URL
+  let type = null;
+  if (props.isSerie) type = "series";
+  else if (movie?.type) type = movie.type;
+  else if (window.location.pathname.includes("series")) type = "series";
+  else if (window.location.pathname.includes("documentary")) type = "documentary";
+  else if (window.location.pathname.includes("kids")) type = "kids";
+  else type = "movie";
+
+  // Use state.movie if available on navigation
   useEffect(() => {
-    // Add console logs to track execution
-    console.log("MovieDetails: Fetching movie with ID:", id);
+    if (state?.movie) {
+      console.log("Using movie from navigation state:", state.movie);
+      setMovie(state.movie);
+      setLoading(false);
+    }
+  }, [state]);
 
-    const fetchMovie = async () => {
-      if (!id) {
-        console.error("No movie ID provided");
+  // Always fetch fresh data when params.id changes
+  useEffect(() => {
+    if (!params.id) return;
+
+    console.log(`Fetching movie with ID: ${params.id}`);
+    setLoading(true);
+
+    // Build the URL based on content type
+    let url = "";
+    if (type === "series")
+      url = `http://localhost:8000/videos/series/${params.id}/`;
+    else if (type === "documentary")
+      url = `http://localhost:8000/videos/documentary/${params.id}/`;
+    else if (type === "kids")
+      url = `http://localhost:8000/videos/kids/${params.id}/`;
+    else url = `http://localhost:8000/videos/films/${params.id}/`;
+
+    axios
+      .get(url)
+      .then((res) => {
+        console.log("Fetched movie details:", res.data);
+        setMovie(res.data);
         setLoading(false);
-        setError("No movie ID provided");
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-
-      try {
-        console.log(
-          `Making API call to: http://localhost:8000/videos/films/${id}/`
-        );
-        const response = await axios.get(
-          `http://localhost:8000/videos/films/${id}/`
-        );
-        console.log("API response:", response.data);
-        setMovie(response.data);
-      } catch (error) {
-        console.error("Error fetching movie:", error);
-        setError("Failed to load movie details. Please try again later.");
-      } finally {
+      })
+      .catch((err) => {
+        console.error("Error fetching movie details:", err);
+        setError("Failed to load movie details");
         setLoading(false);
-      }
-    };
-
-    fetchMovie();
-  }, [id]); // Re-fetch when ID changes
+      });
+  }, [params.id, type]); // Remove 'movie' from dependencies to prevent conflicts
 
   // Debug logs
-  console.log("MovieDetails state:", { loading, error, movie, activeTab });
+  console.log("MovieDetails state:", { loading, error, movie, activeTab, type });
 
   if (loading) {
     return (
@@ -81,8 +97,8 @@ const MovieDetails = () => {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
         <div className="text-center p-4">
-          <h2 className="text-2xl font-bold mb-4">Movie Not Found</h2>
-          <p>We couldn't find the movie you're looking for.</p>
+          <h2 className="text-2xl font-bold mb-4">Content Not Found</h2>
+          <p>We couldn't find what you're looking for.</p>
           <button
             onClick={() => window.history.back()}
             className="mt-6 bg-red-600 px-4 py-2 rounded hover:bg-red-700"
@@ -96,7 +112,7 @@ const MovieDetails = () => {
 
   const tabContent = {
     cast: <MovieCast movie={movie} />,
-    episodes: movie.type === "series" ? <MovieEpisodes movie={movie} /> : null,
+    episodes: type === "series" ? <MovieEpisodes movie={movie} /> : null,
     reviews: <MovieReviews movie={movie} />,
     recommendations: <MovieRecommendations movieId={movie.id} />,
   };
@@ -122,7 +138,7 @@ const MovieDetails = () => {
               )}
             </button>
 
-            {movie.type === "series" && (
+            {type === "series" && (
               <button
                 onClick={() => setActiveTab("episodes")}
                 className={`py-4 px-6 text-sm font-medium transition-colors relative ${

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const MovieRecommendations = ({ movieId }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!movieId) {
@@ -30,8 +31,21 @@ const MovieRecommendations = ({ movieId }) => {
 
   const handleMovieClick = (movie) => {
     console.log("Clicked on recommendation:", movie.id);
-    // Use navigate instead of window.location for better UX
-    navigate(`/home/${movie.id}`);
+
+    // Key fix: Force navigation with state and replace to update the page
+    navigate(
+      `/home/${movie.id}`,
+      {
+        state: { movie: movie },
+        replace: true // Replace current URL to avoid building up history
+      }
+    );
+
+    // Force a page reload to ensure all components are re-rendered
+    // with the new movie data
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   const chunkArray = (array, chunkSize) => {

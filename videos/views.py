@@ -1,6 +1,8 @@
 from rest_framework import generics, permissions, status
 from .models import Film, Serie, Favourite, Review, VideoQuality
 from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer, ReviewSerializer, VideoQualitySerializer, FilmStreamSerializer
+from .models import Film, Serie, Favourite, Review, Actor
+from .serializers import FilmSerializer, SerieSerializer, FavouriteSerializer, ReviewSerializer, ActorSerializer
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -13,6 +15,11 @@ class FilmList(generics.ListAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
     pagination_class = None
+
+
+class SerieList(generics.ListAPIView):
+    queryset = Serie.objects.all()
+    serializer_class = SerieSerializer
 
 
 @api_view(['GET'])
@@ -118,7 +125,7 @@ class FilmDetail(generics.RetrieveAPIView):
 
 class FilmReviewListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]  # <-- THIS LINE
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         film_id = self.kwargs['film_id']
@@ -126,7 +133,7 @@ class FilmReviewListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         film = Film.objects.get(pk=self.kwargs['film_id'])
-        serializer.save(user=self.request.user, film=film)
+        serializer.save(user=self.request.user, film=film, serie=None)
 
 class ReviewDeleteView(generics.DestroyAPIView):
     queryset = Review.objects.all()
@@ -168,6 +175,28 @@ class FilmDetail(generics.RetrieveAPIView):
     queryset = Film.objects.all()
     serializer_class = FilmSerializer
     lookup_url_kwarg = 'film_id'
+
+class SerieDetail(generics.RetrieveAPIView):
+    queryset = Serie.objects.all()
+    serializer_class = SerieSerializer
+    lookup_url_kwarg = 'serie_id'
+
+class ActorList(generics.ListAPIView):
+    queryset = Actor.objects.all()
+    serializer_class = ActorSerializer
+    pagination_class = None  # Disable pagination for this endpoint
+
+class SerieReviewListCreateView(generics.ListCreateAPIView):
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        serie_id = self.kwargs['serie_id']
+        return Review.objects.filter(serie_id=serie_id).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        serie = Serie.objects.get(pk=self.kwargs['serie_id'])
+        serializer.save(user=self.request.user, serie=serie, film=None)
 
 
 @api_view(['GET'])

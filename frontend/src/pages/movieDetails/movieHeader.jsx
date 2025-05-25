@@ -2,13 +2,20 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'; // Add this import for useNavigate
 import { Play } from 'lucide-react'; // Add this import for Play icon
 import Navbar from "../navbar/Navbar";
-import { FaClock, FaFilm, FaUserTie, FaUsers, FaTv, FaCalendar } from 'react-icons/fa';
+import {
+  FaClock,
+  FaFilm,
+  FaUserTie,
+  FaUsers,
+  FaTv,
+  FaCalendar,
+} from "react-icons/fa";
 
 const MovieHeader = ({ movie }) => {
   const navigate = useNavigate(); // Initialize the navigate function
   const [showTrailer, setShowTrailer] = useState(false);
 
-  const formatDuration = (minutes) => {
+    const formatDuration = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     return `${hours}h ${remainingMinutes}min`;
@@ -27,30 +34,32 @@ const MovieHeader = ({ movie }) => {
     <div className="text-white bg-black min-h-screen">
       <Navbar />
       <div className="relative w-full text-white">
-        <div 
+        <div
           className="relative h-[90vh] w-full bg-cover transition-all duration-500"
-          style={{ 
+          style={{
             backgroundImage: `linear-gradient(
               to bottom,
               rgba(0,0,0,0.8) 0%,
               rgba(0,0,0,0.3) 50%,
               rgba(0,0,0,0.95) 100%
             ),url(${movie?.Poster})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover'
+            backgroundPosition: "center",
+            backgroundSize: "cover",
           }}
         >
           <div className="absolute bottom-0 left-0 right-0 p-10 bg-gradient-to-t from-black to-transparent">
             <div className="max-w-4xl mr-5">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{movie?.Titre}</h1>
-              
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                {movie?.Titre}
+              </h1>
+
               {/* Rating and Details */}
               <div className="flex flex-col flex-wrap gap-1 mb-6">
                 <div className="bg-yellow-400 text-black px-1 py-1 rounded font-bold w-max">
                   IMDB {movie?.Imdb}/10
                 </div>
-                
-                {movie?.type === 'movie' && (
+
+                {movie?.type === "movie" && (
                   <div className="flex items-center gap-2">
                     <FaClock className="text-white" />
                     {formatDuration(movie?.Duration)}
@@ -66,7 +75,7 @@ const MovieHeader = ({ movie }) => {
               {/* Genres */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {movie?.Genre?.map((genre, index) => (
-                  <span 
+                  <span
                     key={index}
                     className=" text-white px-3 py-1 rounded-full text-sm bg-red-700 transition-colors cursor-pointe"
                   >
@@ -78,10 +87,9 @@ const MovieHeader = ({ movie }) => {
               {/* Description */}
               <p className="text-md mb-8 text-gray-300">{movie?.Description}</p>
 
-              
-
               {/* Action Buttons */}
               <div className="flex gap-4">
+
                   <a 
                     href={movie.Trailer} 
                     target="_blank" 
@@ -99,6 +107,7 @@ const MovieHeader = ({ movie }) => {
                     <Play size={20} className="mr-2" />
                     Play Now
                   </button>
+
               </div>
             </div>
           </div>

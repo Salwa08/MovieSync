@@ -27,6 +27,9 @@ class FilmSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SerieSerializer(serializers.ModelSerializer):
+    Actors = ActorSerializer(many=True, read_only=True)
+    Director = DirectorSerializer(read_only=True)
+
     class Meta:
         model = Serie
         fields = '__all__'

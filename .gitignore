@@ -3,3 +3,10 @@ __pycache__/
 *.pyc
 db.sqlite3
 videos/management
+restart_server.ps1
+update_backend.ps1
+frontend/src/actors_endpoint.py
+frontend/src/backend_changes_for_series_cast.py
+frontend/src/how_to_fix_series_cast.py
+frontend/src/notes.py
+frontend/src/notes_series_cast.py

@@ -121,12 +121,17 @@ class Favourite(models.Model):
         return f"{self.user.username} - {self.film.Titre}"
 
 class Review(models.Model):
-    film = models.ForeignKey(Film, on_delete=models.CASCADE, related_name='reviews')
+    film = models.ForeignKey(Film, on_delete=models.CASCADE, related_name='film_reviews', null=True, blank=True)
+    serie = models.ForeignKey(Serie, on_delete=models.CASCADE, related_name='serie_reviews', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField()
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.film.Titre} ({self.rating})"
+        if self.film:
+            return f"{self.user.username} - {self.film.Titre} ({self.rating})"
+        elif self.serie:
+            return f"{self.user.username} - {self.serie.Titre} ({self.rating})"
+        return f"{self.user.username} - ({self.rating})"
 

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Star, Send, Trash2, AlertTriangle, X } from 'lucide-react';
-import axios from 'axios';
-import { useUser } from '../../contexts/UserContext';
-import { postReview, deleteReview } from '../../api/auth';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Star, Send, Trash2, AlertTriangle, X } from "lucide-react";
+import axios from "axios";
+import { useUser } from "../../contexts/UserContext";
+import { postReview, deleteReview } from "../../api/auth";
 
 const MovieReviews = ({ movie }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState(null);
-  
+
   const { currentUser, isAuthenticated } = useUser();
   const navigate = useNavigate();
 
@@ -22,7 +22,13 @@ const MovieReviews = ({ movie }) => {
       if (!movie?.id) return;
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8000/videos/films/${movie.id}/reviews/`);
+        let url;
+        if (movie.type === "series") {
+          url = `http://localhost:8000/videos/series/${movie.id}/reviews/`;
+        } else {
+          url = `http://localhost:8000/videos/films/${movie.id}/reviews/`;
+        }
+        const response = await axios.get(url);
         // Handle both array and paginated object responses
         let data = response.data;
         if (Array.isArray(data)) {
@@ -33,7 +39,7 @@ const MovieReviews = ({ movie }) => {
           setReviews([]);
         }
       } catch (err) {
-        console.error('Error fetching reviews:', err);
+        console.error("Error fetching reviews:", err);
         setReviews([]);
       } finally {
         setLoading(false);
@@ -41,32 +47,44 @@ const MovieReviews = ({ movie }) => {
     };
 
     fetchReviews();
-  }, [movie?.id]);
+  }, [movie?.id, movie?.type]);
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-    
+
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
-    
+
     if (rating === 0) {
-      alert('Please select a rating');
+      alert("Please select a rating");
       return;
     }
-    
+
     try {
-      const newReview = await postReview(movie.id, {
-        rating,
-        comment
-      });
+      let newReview;
+      if (movie.type === "series") {
+        newReview = await postReview(
+          movie.id,
+          {
+            rating,
+            comment,
+          },
+          "series"
+        );
+      } else {
+        newReview = await postReview(movie.id, {
+          rating,
+          comment,
+        });
+      }
       setReviews([newReview, ...reviews]);
       setRating(0);
-      setComment('');
+      setComment("");
     } catch (err) {
-      console.error('Error submitting review:', err);
-      alert('Failed to submit review. Please try again.');
+      console.error("Error submitting review:", err);
+      alert("Failed to submit review. Please try again.");
     }
   };
 
@@ -77,15 +95,15 @@ const MovieReviews = ({ movie }) => {
 
   const confirmDelete = async () => {
     if (!reviewToDelete) return;
-    
+
     try {
-      await deleteReview(movie.id, reviewToDelete.id); 
-      setReviews(reviews.filter(review => review.id !== reviewToDelete.id));
+      await deleteReview(movie.id, reviewToDelete.id);
+      setReviews(reviews.filter((review) => review.id !== reviewToDelete.id));
       setShowDeleteModal(false);
       setReviewToDelete(null);
     } catch (err) {
-      console.error('Error deleting review:', err);
-      alert('Failed to delete review. Please try again.');
+      console.error("Error deleting review:", err);
+      alert("Failed to delete review. Please try again.");
     }
   };
 
@@ -95,27 +113,31 @@ const MovieReviews = ({ movie }) => {
   };
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   if (loading) {
-    return <div className="p-8 flex justify-center">
-      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-red-600"></div>
-    </div>;
+    return (
+      <div className="p-8 flex justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-red-600"></div>
+      </div>
+    );
   }
 
   // Log outside the map, for all reviews
   if (reviews.length > 0 && currentUser) {
     console.log(
-      'Liste des IDs des reviews et currentUser.id:',
-      reviews.map(r => [r.user?.id, typeof r.user?.id]),
-      'currentUser.id:', currentUser.id, typeof currentUser.id
+      "Liste des IDs des reviews et currentUser.id:",
+      reviews.map((r) => [r.user?.id, typeof r.user?.id]),
+      "currentUser.id:",
+      currentUser.id,
+      typeof currentUser.id
     );
   }
 
   if (reviews.length > 0) {
-    console.log('currentUser:', currentUser);
+    console.log("currentUser:", currentUser);
   }
 
   return (
@@ -125,7 +147,7 @@ const MovieReviews = ({ movie }) => {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           {/* Dark overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-75"></div>
-          
+
           {/* Modal */}
           <div className="relative bg-gray-900 rounded-lg w-full max-w-md mx-4 border-2 border-red-600 overflow-hidden">
             {/* Header */}
@@ -134,20 +156,21 @@ const MovieReviews = ({ movie }) => {
                 <AlertTriangle size={20} className="mr-2" />
                 Delete Review
               </h3>
-              <button 
+              <button
                 onClick={cancelDelete}
                 className="text-white hover:text-gray-200 focus:outline-none"
               >
                 <X size={20} />
               </button>
             </div>
-            
+
             {/* Body */}
             <div className="p-6">
               <p className="text-white mb-6">
-                Are you sure you want to delete this review? This action cannot be undone.
+                Are you sure you want to delete this review? This action cannot
+                be undone.
               </p>
-              
+
               {/* Review preview */}
               <div className="bg-gray-800 p-3 rounded-md mb-6">
                 <div className="flex items-center mb-2">
@@ -157,15 +180,17 @@ const MovieReviews = ({ movie }) => {
                       size={14}
                       className={`${
                         i < reviewToDelete?.rating
-                          ? 'text-yellow-400 fill-yellow-400'
-                          : 'text-gray-500'
+                          ? "text-yellow-400 fill-yellow-400"
+                          : "text-gray-500"
                       }`}
                     />
                   ))}
                 </div>
-                <p className="text-gray-300 text-sm line-clamp-2">{reviewToDelete?.comment}</p>
+                <p className="text-gray-300 text-sm line-clamp-2">
+                  {reviewToDelete?.comment}
+                </p>
               </div>
-              
+
               {/* Buttons */}
               <div className="flex justify-end gap-3">
                 <button
@@ -188,7 +213,9 @@ const MovieReviews = ({ movie }) => {
 
       <div>
         {reviews.length === 0 ? (
-          <p className="text-gray-400">No reviews yet. Be the first to review this movie!</p>
+          <p className="text-gray-400">
+            No reviews yet. Be the first to review this movie!
+          </p>
         ) : (
           reviews.map((review) => (
             <div key={review.id} className="bg-gray-800 rounded-lg p-4 mx-8">
@@ -203,8 +230,8 @@ const MovieReviews = ({ movie }) => {
                           size={16}
                           className={`${
                             i < review.rating
-                              ? 'text-yellow-400 fill-yellow-400'
-                              : 'text-gray-500'
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-500"
                           }`}
                         />
                       ))}
@@ -214,9 +241,9 @@ const MovieReviews = ({ movie }) => {
                     </div>
                   </div>
                 </div>
-               
+
                 {currentUser && currentUser.id === review.user?.id && (
-                  <button 
+                  <button
                     onClick={() => handleDeleteClick(review)}
                     className="text-gray-400 hover:text-red-500 transition-colors"
                   >
@@ -229,9 +256,12 @@ const MovieReviews = ({ movie }) => {
           ))
         )}
       </div>
-      
+
       {isAuthenticated ? (
-        <form onSubmit={handleSubmitReview} className="bg-gray-800 rounded-lg p-6 mb-8">
+        <form
+          onSubmit={handleSubmitReview}
+          className="bg-gray-800 rounded-lg p-6 mb-8"
+        >
           <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
           <div className="mb-4">
             <div className="flex">
@@ -248,14 +278,14 @@ const MovieReviews = ({ movie }) => {
                     size={24}
                     className={`${
                       (hoverRating || rating) >= star
-                        ? 'text-yellow-400 fill-yellow-400'
-                        : 'text-gray-500'
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-500"
                     }`}
                   />
                 </button>
               ))}
               <span className="ml-2 text-gray-400">
-                {rating > 0 ? `${rating} of 5 stars` : ''}
+                {rating > 0 ? `${rating} of 5 stars` : ""}
               </span>
             </div>
           </div>
@@ -282,15 +312,13 @@ const MovieReviews = ({ movie }) => {
         <div className="bg-gray-800 rounded-lg p-6 mb-8 text-center">
           <p className="mb-4">Sign in to leave a review</p>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate("/login")}
             className="bg-red-600 text-white px-6 py-2 rounded-full"
           >
             Sign In
           </button>
         </div>
       )}
-
-     
     </div>
   );
 };

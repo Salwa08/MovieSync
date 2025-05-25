@@ -114,14 +114,18 @@ export const updateProfile = async (userData) => {
   }
 };
 
-export const postReview = async (movieId, reviewData) => {
+export const postReview = async (movieId, reviewData, type = "film") => {
   const token = localStorage.getItem("authToken");
+  let url;
+  if (type === "series") {
+    url = `http://localhost:8000/videos/series/${movieId}/reviews/`;
+  } else {
+    url = `http://localhost:8000/videos/films/${movieId}/reviews/`;
+  }
   return (
-    await axios.post(
-      `http://localhost:8000/videos/films/${movieId}/reviews/`,
-      reviewData,
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
+    await axios.post(url, reviewData, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
   ).data;
 };
 

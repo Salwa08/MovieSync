@@ -67,4 +67,4 @@ MIT
 
 ---
 
-_For a full demo script in French, see the project documentation._
+

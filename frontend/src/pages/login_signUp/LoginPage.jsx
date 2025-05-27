@@ -8,7 +8,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { loginUser } = useUser();
   
-  // Use individual state variables instead of formData object
+ 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -19,10 +19,10 @@ const LoginPage = () => {
     try {
       const response = await login(email, password);
       
-      // Store user data and token in context
+      
       loginUser(response.user, response.token);
       
-      // Redirect to home page
+      
       navigate('/home');
     } catch (error) {
       setError(error.error || 'Login failed. Please check your credentials.');

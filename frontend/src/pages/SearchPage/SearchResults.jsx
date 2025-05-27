@@ -11,7 +11,7 @@ function SearchResults({
 }) {
   return (
     <main className="w-full max-w-screen-lg mx-auto flex flex-col items-center px-4 py-8">
-      {/* Results Header */}
+      
       {hasSearched && (isLoading || movies.length > 0) && (
         <div className="mb-8 w-full flex flex-col items-center">
           <h1 className="text-xl font-medium text-center">
@@ -20,7 +20,7 @@ function SearchResults({
         </div>
       )}
 
-      {/* Loading State */}
+      
       {isLoading && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full justify-center">
           {Array.from({ length: 10 }).map((_, i) => (
@@ -33,7 +33,7 @@ function SearchResults({
         </div>
       )}
 
-      {/* Movie Grid */}
+     
       {!isLoading && movies.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full justify-center">
           {movies.map((movie) => (
@@ -42,7 +42,7 @@ function SearchResults({
         </div>
       )}
 
-      {/* No Results State */}
+      
       {!isLoading && movies.length === 0 && hasSearched && (
         <div className="flex flex-col items-center justify-center py-16 w-full">
           <div className="text-6xl mb-4">🎬</div>
@@ -68,7 +68,7 @@ function SearchResults({
         </div>
       )}
 
-      {/* Initial State */}
+      
       {!hasSearched && !isLoading && (
         <div className="flex flex-col items-center justify-center py-16 w-full">
           <div className="text-6xl mb-4">🔍</div>

@@ -66,5 +66,4 @@ class FilmStreamSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Film
-        # Change 'video_url' to 'Video' to match your model field name
         fields = ['id', 'Titre', 'Poster', 'Video', 'Duration', 'qualities']

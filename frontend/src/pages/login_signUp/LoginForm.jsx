@@ -1,18 +1,18 @@
 "use client";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Changed from next/navigation
+import { useNavigate } from "react-router-dom"; 
 import InputField from "./InputField";
 import SocialLoginButton from "./SocialLoginButton";
 import Logo from "./Logo";
-import { useUser } from "../../contexts/UserContext"; // Changed from @/app/context/AuthProvider
-import { login } from "../../api/auth"; // Changed from @/app/actions/auth
+import { useUser } from "../../contexts/UserContext"; 
+import { login } from "../../api/auth";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Changed from useRouter
-  const { loginUser } = useUser(); // Get loginUser from context
+  const navigate = useNavigate(); 
+  const { loginUser } = useUser(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,11 +23,8 @@ const LoginForm = () => {
       const response = await login(email, password);
       console.log("Login successful:", response);
 
-      // Store user data and token in context
       loginUser(response.user, response.token || response.access);
-
-      // Redirect to home page
-      navigate("/home"); // Changed from router.push
+      navigate("/home"); 
     } catch (error) {
       console.error("Login error:", error);
       setError(error.error || "Login failed. Please check your credentials.");
@@ -60,8 +57,8 @@ const LoginForm = () => {
               type="text"
               placeholder="Username"
               name="username"
-              value={email} // Reusing the email state for username
-              onChange={(e) => setEmail(e.target.value)} // Reusing setEmail for username
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
             />
 
             <InputField

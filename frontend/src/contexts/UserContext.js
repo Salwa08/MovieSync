@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(() => localStorage.getItem("authToken"));
 
-  // Load user from token on initial render
+  
   useEffect(() => {
     const loadUser = async () => {
       setLoading(true);
@@ -29,7 +29,7 @@ try {
   setCurrentUser(response.data);
   setIsAuthenticated(true);
 } catch (error) {
-  // handle error, e.g., clear token and user state
+  
   localStorage.removeItem("authToken");
   setToken(null);
   delete axios.defaults.headers.common["Authorization"];
@@ -40,7 +40,7 @@ try {
 }
       } catch (error) {
         console.error("Failed to load user:", error);
-        // Clear invalid token
+        
         localStorage.removeItem("authToken");
         setToken(null);
         delete axios.defaults.headers.common["Authorization"];
@@ -70,7 +70,7 @@ try {
     setIsAuthenticated(false);
   };
 
-  // Update user data (e.g., after profile update)
+  // Update user data 
   const updateUser = (userData) => {
     setCurrentUser((prevUser) => ({
       ...prevUser,

@@ -9,7 +9,7 @@ function Header() {
   return (
     <header className="sticky top-0 bg-[#141414] flex w-full h-[91px] px-[52px] py-[3px] items-center flex-shrink-0 relative z-50">
       <div className="flex justify-between w-full items-center">
-        {/* Use Logo directly, no extra div needed */}
+       
         <Logo />
         <nav className="flex rounded-[10px] border-[3px] border-[#1F1F1F] bg-[#0F0F0F] p-2 items-center gap-4">
           <a

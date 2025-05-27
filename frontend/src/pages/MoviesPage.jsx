@@ -79,7 +79,7 @@ function MoviesPage() {
 
   const handleSelectMovie = (movie) => {
     setHeroMovie(movie);
-    // Smooth scroll to top when changing hero movie
+    
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -134,8 +134,6 @@ function MoviesPage() {
             </div>
           </MovieHero>
         )}
-
-        {/* SECTIONS */}
 
         {/* SECTION FANTASY */}
 

@@ -102,8 +102,8 @@ function PricingSection() {
               billingCycle === "monthly" ? plan.monthlyPrice : plan.yearlyPrice
             }
             billingCycle={billingCycle}
-            features={plan.features} // Pass features to PricingCard
-            isPopular={plan.isPopular} // Pass isPopular to PricingCard
+            features={plan.features} 
+            isPopular={plan.isPopular} 
           />
         ))}
       </div>

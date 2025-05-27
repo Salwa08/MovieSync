@@ -12,7 +12,7 @@ function DocumentaryPage() {
   const [popularDocs, setPopularDocs] = useState([]);
   const [newReleases, setNewReleases] = useState([]);
   const [trendingNow, setTrendingNow] = useState([]);
-  const [hearted, setHearted] = useState({}); // Track hearted state per doc
+  const [hearted, setHearted] = useState({});
   const { isAuthenticated, user } = useUser();
   const navigate = useNavigate();
 
@@ -23,7 +23,6 @@ function DocumentaryPage() {
     axios
       .get("http://localhost:8000/videos/films/")
       .then((response) => {
-        // Filter for documentaries by genre
         const allDocs = response.data.filter((film) =>
           Array.isArray(film.Genre)
             ? film.Genre.map((g) => g.toLowerCase()).includes("documentary")
@@ -47,7 +46,6 @@ function DocumentaryPage() {
     navigate(`/documentary/${doc.id}`, { state: { movie: doc } });
   };
 
-  // Heart logic (copy from MovieCard)
   const handleHeartClick = async (e, doc) => {
     e.stopPropagation();
     if (!user || !user.token) return;
@@ -84,7 +82,6 @@ function DocumentaryPage() {
       `}</style>
       <Navbar />
       <div className="flex flex-col">
-        {/* HERO SECTION */}
         {documentaries[0] && (
           <div className="mt-[80px] md:mt-[120px] p-5 rounded-xl overflow-hidden m-5 bg-gray-900">
             <h2 className="text-3xl font-bold mb-4">Featured Documentary</h2>
@@ -98,7 +95,6 @@ function DocumentaryPage() {
                   alt={documentaries[0].Titre}
                   className="w-full h-full object-cover rounded-lg"
                 />
-                {/* Heart button overlay */}
                 <button
                   className={`absolute top-2 right-2 rounded-full p-2 transition-opacity bg-neutral-800/80 ${
                     hearted[documentaries[0].id] ? "bg-red-600" : ""
@@ -141,7 +137,6 @@ function DocumentaryPage() {
             </div>
           </div>
         )}
-        {/* POPULAR DOCUMENTARIES */}
         {popularDocs.length > 0 && (
           <div className="mt-4 p-5 rounded-xl overflow-hidden m-5">
             <h2 className="text-2xl font-bold mb-4">Popular Documentaries</h2>
@@ -158,7 +153,6 @@ function DocumentaryPage() {
             </div>
           </div>
         )}
-        {/* NEW RELEASES */}
         {newReleases.length > 0 && (
           <div className="mt-4 p-5 rounded-xl overflow-hidden m-5">
             <h2 className="text-2xl font-bold mb-4">New Releases</h2>
@@ -175,7 +169,6 @@ function DocumentaryPage() {
             </div>
           </div>
         )}
-        {/* TRENDING NOW */}
         {trendingNow.length > 0 && (
           <div className="mt-4 p-5 rounded-xl overflow-hidden m-5">
             <h2 className="text-2xl font-bold mb-4">Trending Now</h2>

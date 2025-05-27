@@ -1,18 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom'; // Add this import for useNavigate
-import { Play } from 'lucide-react'; // Add this import for Play icon
+import { useNavigate } from 'react-router-dom'; 
+import { Play } from 'lucide-react'; 
 import Navbar from "../navbar/Navbar";
 import {
   FaClock,
-  FaFilm,
-  FaUserTie,
-  FaUsers,
-  FaTv,
   FaCalendar,
 } from "react-icons/fa";
 
 const MovieHeader = ({ movie }) => {
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate(); 
   const [showTrailer, setShowTrailer] = useState(false);
 
     const formatDuration = (minutes) => {
@@ -21,7 +17,7 @@ const MovieHeader = ({ movie }) => {
     return `${hours}h ${remainingMinutes}min`;
   };
 
-  // Add this guard clause at the beginning of your component
+  
   if (!movie) {
     return (
       <div className="h-[70vh] bg-gray-900 animate-pulse flex items-center justify-center">
@@ -53,7 +49,7 @@ const MovieHeader = ({ movie }) => {
                 {movie?.Titre}
               </h1>
 
-              {/* Rating and Details */}
+              
               <div className="flex flex-col flex-wrap gap-1 mb-6">
                 <div className="bg-yellow-400 text-black px-1 py-1 rounded font-bold w-max">
                   IMDB {movie?.Imdb}/10
@@ -72,7 +68,7 @@ const MovieHeader = ({ movie }) => {
                 </div>
               </div>
 
-              {/* Genres */}
+              
               <div className="flex flex-wrap gap-2 mb-4">
                 {movie?.Genre?.map((genre, index) => (
                   <span
@@ -84,10 +80,10 @@ const MovieHeader = ({ movie }) => {
                 ))}
               </div>
 
-              {/* Description */}
+              
               <p className="text-md mb-8 text-gray-300">{movie?.Description}</p>
 
-              {/* Action Buttons */}
+              
               <div className="flex gap-4">
 
                   <a 
@@ -114,7 +110,7 @@ const MovieHeader = ({ movie }) => {
         </div>
       </div>
 
-      {/* Trailer modal - only render if movie.Trailer exists */}
+      
       {showTrailer && movie.Trailer && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
           <div className="relative w-full max-w-5xl">

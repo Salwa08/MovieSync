@@ -10,7 +10,7 @@ const NavigationGuard = ({ children }) => {
   const publicRoutes = ['/', '/login', '/register', '/forgot-password'];
   
   useEffect(() => {
-    // Only check routes after loading completes
+   
     if (!loading) {
       const isPublicRoute = publicRoutes.some(route => 
         location.pathname === route || 

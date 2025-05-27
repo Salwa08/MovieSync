@@ -35,7 +35,7 @@ def search_content(request):
     release_year = request.GET.get('release_year', None)
     rating = request.GET.get('rating', None)
 
-    # Only return error if ALL filters are empty
+    
     if not (query or genre or release_year or rating):
         return Response({'error': 'At least one search parameter is required.'}, status=400)
 
@@ -64,8 +64,7 @@ def search_content(request):
     }, status=200)
 
 
-# this view is used to fetch popular movies from TMDB API
-# and return them to the frontend
+
 @api_view(["GET"])
 def get_popular_movies(request):
     api_key = "d0d4b33791fab1f5e75924ccb1f14603"  
@@ -73,7 +72,7 @@ def get_popular_movies(request):
     all_movies = []
 
     try:
-        for page in range(1, 6):  # Fetch up to 5 pages (100 movies, 20 per page)
+        for page in range(1, 6): 
             response = requests.get(
                 f"{base_url}?api_key={api_key}&language=en-US&page={page}"
             )
@@ -141,7 +140,6 @@ class ReviewDeleteView(generics.DestroyAPIView):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        # Only allow users to delete their own reviews
         return Review.objects.filter(user=self.request.user)
 
 
@@ -152,10 +150,9 @@ def movie_recommendations(request, film_id):
         genres = movie.Genre if movie.Genre else []
         print("Genres for movie:", genres)
         
-        # Get all other films
+      
         all_films = Film.objects.exclude(id=film_id)
-        
-        # Manual comparison for matching genres
+
         recommendations = []
         for film in all_films:
             film_genres = film.Genre if film.Genre else []
@@ -184,7 +181,7 @@ class SerieDetail(generics.RetrieveAPIView):
 class ActorList(generics.ListAPIView):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
-    pagination_class = None  # Disable pagination for this endpoint
+    pagination_class = None  
 
 class SerieReviewListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer

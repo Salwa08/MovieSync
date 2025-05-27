@@ -21,7 +21,7 @@ function HomePage() {
           <FaqSection id="support"/>
           <PricingSection id="subscriptions"/>
 
-          {/* Decorative images section */}
+          
 
 
 

@@ -1,8 +1,7 @@
-// Subscription: plan info, billing, etc.
 import React from "react";
 
 const Subscription = () => {
-  // TODO: Display subscription plan, billing info, upgrade/downgrade
+ 
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Subscription</h2>

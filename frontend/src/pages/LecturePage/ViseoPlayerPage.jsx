@@ -21,7 +21,7 @@ const VideoPlayerPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Player state
+ 
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -37,7 +37,7 @@ const VideoPlayerPage = () => {
   const playerRef = useRef(null);
   const controlsTimerRef = useRef(null);
   
-  // Helper functions to handle YouTube URLs
+  
   const isYouTubeUrl = (url) => {
     return url && (
       url.includes('youtube.com') || 
@@ -48,17 +48,17 @@ const VideoPlayerPage = () => {
   const getYouTubeId = (url) => {
     if (!url) return null;
     
-    // Handle youtu.be format
+    
     if (url.includes('youtu.be/')) {
       return url.split('youtu.be/')[1].split('?')[0];
     }
     
-    // Handle youtube.com format
+    
     if (url.includes('v=')) {
       return url.split('v=')[1].split('&')[0];
     }
     
-    // Handle embed format
+    
     if (url.includes('/embed/')) {
       return url.split('/embed/')[1].split('?')[0];
     }
@@ -66,7 +66,7 @@ const VideoPlayerPage = () => {
     return null;
   };
 
-  // Convert YouTube URL to embed URL
+  
   const getYouTubeEmbedUrl = (url) => {
     const videoId = getYouTubeId(url);
     if (videoId) {
@@ -75,26 +75,26 @@ const VideoPlayerPage = () => {
     return null;
   };
   
-  // Fetch movie data on component mount
+
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
         setLoading(true);
         console.log(`Fetching movie data for ID: ${id}`);
         
-        // First try regular film endpoint
+        
         const response = await axios.get(`http://localhost:8000/videos/films/${id}/`);
         console.log('Movie data:', response.data);
         setMovie(response.data);
         
-        // Check for a valid video source
+        
         if (!response.data.Video && (!response.data.qualities || response.data.qualities.length === 0)) {
           console.warn('No video sources found in the movie data');
           
-          // Set a fallback video
+          
           setError('This movie does not have a video source. Using a sample video instead.');
           
-          // Modify the movie object to include a sample video
+          
           setMovie({
             ...response.data,
             Video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
@@ -111,11 +111,11 @@ const VideoPlayerPage = () => {
     fetchMovieData();
   }, [id]);
   
-  // Find the appropriate video source
+  
   const getCurrentVideoUrl = () => {
     if (!movie) return '';
     
-    // Use qualities if available
+  
     if (movie.qualities && movie.qualities.length > 0) {
       const qualityOption = movie.qualities.find(q => q.quality === selectedQuality);
       if (qualityOption && qualityOption.video_url) {
@@ -124,18 +124,18 @@ const VideoPlayerPage = () => {
       }
     }
     
-    // Fallback to the movie's Video field
+    
     if (movie.Video) {
       console.log('Using movie.Video:', movie.Video);
       return movie.Video;
     }
     
-    // Ultimate fallback - sample video
+    
     console.log('No valid video URL found, using fallback');
     return "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
   };
   
-  // Handle video events
+ 
   useEffect(() => {
     if (!videoRef.current) return;
     
@@ -183,7 +183,7 @@ const VideoPlayerPage = () => {
     };
   }, [videoRef]);
   
-  // Handle auto-hiding controls
+  
   useEffect(() => {
     if (playing) {
       controlsTimerRef.current = setTimeout(() => {
@@ -199,7 +199,7 @@ const VideoPlayerPage = () => {
     };
   }, [playing, showControls]);
   
-  // Handle fullscreen changes
+ 
   useEffect(() => {
     const handleFullscreenChange = () => {
       setFullscreen(!!document.fullscreenElement);
@@ -212,7 +212,7 @@ const VideoPlayerPage = () => {
     };
   }, []);
   
-  // Helper function to format time
+  
   const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -225,7 +225,7 @@ const VideoPlayerPage = () => {
     ].filter(Boolean).join(':');
   };
   
-  // Video control functions
+ 
   const togglePlay = () => {
     if (videoRef.current) {
       if (playing) {
@@ -268,7 +268,7 @@ const VideoPlayerPage = () => {
     }
   };
   
-  // Show loading state
+
   if (loading) {
     return (
       <div className="bg-black h-screen w-screen flex items-center justify-center">
@@ -277,12 +277,12 @@ const VideoPlayerPage = () => {
     );
   }
 
-  // Determine if we should use YouTube player or native video player
+  
   const currentVideoUrl = getCurrentVideoUrl();
   const isYouTubeVideo = isYouTubeUrl(currentVideoUrl);
   const youtubeEmbedUrl = isYouTubeVideo ? getYouTubeEmbedUrl(currentVideoUrl) : null;
   
-  // Main player UI
+ 
   return (
     <div 
       ref={playerRef}
@@ -298,7 +298,7 @@ const VideoPlayerPage = () => {
         }
       }}
     >
-      {/* Back button (always visible) */}
+      
       <div className="absolute top-4 left-4 z-50">
         <button 
           onClick={() => navigate(`/home/${id}`)}
@@ -308,7 +308,7 @@ const VideoPlayerPage = () => {
         </button>
       </div>
       
-      {/* YouTube Embed */}
+     
       {isYouTubeVideo && youtubeEmbedUrl ? (
         <div className="w-full h-full">
           <iframe 
@@ -321,9 +321,9 @@ const VideoPlayerPage = () => {
           ></iframe>
         </div>
       ) : (
-        /* HTML5 Video Player */
+        
         <>
-          {/* Video Element */}
+          
           <video
             ref={videoRef}
             className="absolute top-0 left-0 w-full h-full object-contain"
@@ -331,13 +331,13 @@ const VideoPlayerPage = () => {
             onClick={togglePlay}
             autoPlay
           >
-            {/* Multiple source elements for better compatibility */}
+            
             <source src={currentVideoUrl} type="video/mp4" />
             <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
             Your browser does not support HTML5 video.
           </video>
           
-          {/* Error notification */}
+          
           {error && (
             <div className="absolute top-4 right-4 bg-red-600 text-white p-4 rounded-lg max-w-sm">
               <div className="flex items-start">
@@ -347,14 +347,14 @@ const VideoPlayerPage = () => {
             </div>
           )}
           
-          {/* Buffering Indicator */}
+          
           {bufferingState && (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-transparent border-red-600"></div>
             </div>
           )}
           
-          {/* Play/Pause Big Button Overlay */}
+          
           {!playing && (
             <div 
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
@@ -365,12 +365,12 @@ const VideoPlayerPage = () => {
             </div>
           )}
           
-          {/* Bottom Controls */}
+          
           <div 
             className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent
                       transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
           >
-            {/* Progress Bar */}
+            
             <div 
               className="w-full h-1.5 bg-gray-600 cursor-pointer mb-4 rounded"
               onClick={handleSeek}
@@ -381,15 +381,15 @@ const VideoPlayerPage = () => {
               ></div>
             </div>
             
-            {/* Controls Row */}
+           
             <div className="flex items-center justify-between">
-              {/* Left Controls */}
+              
               <div className="flex items-center">
                 <button onClick={togglePlay} className="mr-4 text-white hover:text-red-500">
                   {playing ? <Pause size={22} /> : <Play size={22} />}
                 </button>
                 
-                {/* Volume Control */}
+               
                 <div className="flex items-center mr-4">
                   <button onClick={toggleMute} className="text-white hover:text-red-500 mr-2">
                     {muted || volume === 0 ? <VolumeX size={22} /> : <Volume2 size={22} />}
@@ -405,15 +405,15 @@ const VideoPlayerPage = () => {
                   />
                 </div>
                 
-                {/* Time Display */}
+                
                 <div className="text-white text-sm">
                   {formatTime(currentTime)} / {formatTime(duration || 0)}
                 </div>
               </div>
               
-              {/* Right Controls */}
+              
               <div className="flex items-center">
-                {/* Fullscreen Button */}
+                
                 <button 
                   onClick={toggleFullscreen}
                   className="text-white hover:text-red-500"

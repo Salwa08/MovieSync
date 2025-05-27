@@ -45,10 +45,10 @@ def login_api(request):
     
     logger.info(f"Login attempt with: {username_or_email}")
     
-    # First try direct username authentication
+    
     user = authenticate(username=username_or_email, password=password)
     
-    # If that fails, try to find a user with matching email
+    
     if user is None:
         try:
             # Look up the user with this email
@@ -94,11 +94,10 @@ def profile_stats(request):
     now = timezone.now()
     start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
-    # User progress queryset
+    
     progress_qs = UserMovieProgress.objects.filter(user=user)
     movies_watched = progress_qs.filter(progress=100).count()
     movies_this_month = progress_qs.filter(progress=100, last_watched__gte=start_of_month).count()
-    # Recently watched: any movie with progress > 0, order by last_watched
     recent_progress = progress_qs.filter(progress__gt=0).order_by('-last_watched')[:5]
     recent_movies = [
         {
@@ -111,7 +110,7 @@ def profile_stats(request):
         }
         for p in recent_progress
     ]
-    # Favourites (unchanged)
+  
     favourites_qs = Favourite.objects.filter(user=user).select_related('film')
     favourites = [
         {
@@ -122,7 +121,7 @@ def profile_stats(request):
         }
         for fav in favourites_qs
     ]
-    # Watchlist (placeholder)
+    
     watchlist = []
     avatar = user.profile.avatar if hasattr(user, 'profile') and user.profile.avatar else 'http://localhost:3000/assets/default_avatar.png'
     stats = {
@@ -130,7 +129,7 @@ def profile_stats(request):
         'email': user.email,
         'movies_watched': movies_watched,
         'movies_this_month': movies_this_month,
-        'watch_time': "0h 0m",  # Placeholder
+        'watch_time': "0h 0m",  
         'subscription': getattr(user, 'subscription', 'Free'),
         'favorites': len(favourites),
         'watchlist': len(watchlist),
@@ -162,11 +161,11 @@ def upload_avatar(request):
     avatar_file = request.FILES.get('avatar')
     if not avatar_file:
         return Response({'error': 'No file provided'}, status=status.HTTP_400_BAD_REQUEST)
-    # Save the file
+   
     filename = f"avatars/user_{user.id}_{avatar_file.name}"
     file_path = default_storage.save(filename, avatar_file)
     avatar_url = settings.MEDIA_URL + filename
-    # Update profile
+   
     user.profile.avatar = avatar_url
     user.profile.save()
     return Response({'avatar': avatar_url}, status=status.HTTP_200_OK)

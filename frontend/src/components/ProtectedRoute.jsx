@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children }) => {
     }
   }, [loading, isAuthenticated]);
 
-  // Still show loading state while authentication check is in progress
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -30,13 +30,13 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // React Router's Navigate component as a fallback
+  
   if (!isAuthenticated) {
     console.log('Using Navigate for unauthenticated user');
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // Only render children if authenticated
+
   console.log('User authenticated, rendering protected content');
   return children;
 };

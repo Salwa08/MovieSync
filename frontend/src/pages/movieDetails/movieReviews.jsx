@@ -29,7 +29,7 @@ const MovieReviews = ({ movie }) => {
           url = `http://localhost:8000/videos/films/${movie.id}/reviews/`;
         }
         const response = await axios.get(url);
-        // Handle both array and paginated object responses
+        
         let data = response.data;
         if (Array.isArray(data)) {
           setReviews(data);
@@ -125,7 +125,7 @@ const MovieReviews = ({ movie }) => {
     );
   }
 
-  // Log outside the map, for all reviews
+ 
   if (reviews.length > 0 && currentUser) {
     console.log(
       "Liste des IDs des reviews et currentUser.id:",
@@ -142,15 +142,14 @@ const MovieReviews = ({ movie }) => {
 
   return (
     <div className="p-8 text-white">
-      {/* Delete Confirmation Modal */}
+     
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          {/* Dark overlay */}
+          
           <div className="absolute inset-0 bg-black bg-opacity-75"></div>
 
-          {/* Modal */}
           <div className="relative bg-gray-900 rounded-lg w-full max-w-md mx-4 border-2 border-red-600 overflow-hidden">
-            {/* Header */}
+            
             <div className="bg-red-600 px-4 py-3 flex justify-between items-center">
               <h3 className="text-xl font-bold text-white flex items-center">
                 <AlertTriangle size={20} className="mr-2" />
@@ -164,14 +163,13 @@ const MovieReviews = ({ movie }) => {
               </button>
             </div>
 
-            {/* Body */}
             <div className="p-6">
               <p className="text-white mb-6">
                 Are you sure you want to delete this review? This action cannot
                 be undone.
               </p>
 
-              {/* Review preview */}
+              
               <div className="bg-gray-800 p-3 rounded-md mb-6">
                 <div className="flex items-center mb-2">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -191,7 +189,7 @@ const MovieReviews = ({ movie }) => {
                 </p>
               </div>
 
-              {/* Buttons */}
+              
               <div className="flex justify-end gap-3">
                 <button
                   onClick={cancelDelete}

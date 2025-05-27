@@ -32,7 +32,7 @@ const MovieRecommendations = ({ movieId }) => {
   const handleMovieClick = (movie) => {
     console.log("Clicked on recommendation:", movie.id);
 
-    // Key fix: Force navigation with state and replace to update the page
+    
     navigate(
       `/home/${movie.id}`,
       {
@@ -41,8 +41,7 @@ const MovieRecommendations = ({ movieId }) => {
       }
     );
 
-    // Force a page reload to ensure all components are re-rendered
-    // with the new movie data
+    
     setTimeout(() => {
       window.location.reload();
     }, 100);
@@ -74,7 +73,7 @@ const MovieRecommendations = ({ movieId }) => {
 
   if (recommendations.length === 0) return null;
 
-  // Group recommendations into rows of 4
+  
   const rows = chunkArray(recommendations, 4);
 
   return (

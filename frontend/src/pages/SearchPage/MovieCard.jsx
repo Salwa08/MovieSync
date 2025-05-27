@@ -9,7 +9,7 @@ function MovieCard({ movie, userToken }) {
     e.preventDefault(); // Prevent navigating to movie page
 
     if (!hearted) {
-      // Add to favourites
+      
       const res = await fetch("http://localhost:8000/videos/favourites/add/", {
         method: "POST",
         headers: {
@@ -23,7 +23,7 @@ function MovieCard({ movie, userToken }) {
       if (res.ok) setHearted(true);
       else alert(data.error || "Failed to add favourite");
     } else {
-      // Remove from favourites
+      
       const res = await fetch(
         `http://localhost:8000/videos/favourites/remove/${movie.id}/`,
         {
@@ -56,7 +56,7 @@ function MovieCard({ movie, userToken }) {
             className="object-cover w-full h-full"
             style={{ minHeight: 200 }}
           />
-          {/* Heart icon button, visible on hover */}
+          
           <button
             className={`absolute top-2 right-2 rounded-full p-2 transition-opacity opacity-0 group-hover:opacity-100 focus:opacity-100 ${
               hearted ? "bg-red-600" : "bg-neutral-800/80"
@@ -92,7 +92,7 @@ function MovieCard({ movie, userToken }) {
               {movie.Imdb || movie.imdb_rating || "-"} / 10
             </span>
           </div>
-          {/* Tomato score, if available */}
+          
           {movie.rt_rating && (
             <div className="flex items-center gap-2">
               <span className="inline-block w-4 h-4 bg-red-500 rounded-full mr-1"></span>

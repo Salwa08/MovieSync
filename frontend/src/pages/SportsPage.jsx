@@ -18,7 +18,7 @@ function SportsPage() {
     axios
       .get("http://localhost:8000/videos/films/")
       .then((response) => {
-        // Filter for sports films by genre
+       
         const sportsFilms = response.data.filter((film) =>
           Array.isArray(film.Genre)
             ? film.Genre.some((g) => g.toLowerCase() === "sports")

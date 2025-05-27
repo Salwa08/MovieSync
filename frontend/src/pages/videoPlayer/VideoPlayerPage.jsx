@@ -37,7 +37,7 @@ const VideoPlayerPage = () => {
   const playerRef = useRef(null);
   const controlsTimerRef = useRef(null);
   
-  // Fetch movie data on component mount
+
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
@@ -45,7 +45,7 @@ const VideoPlayerPage = () => {
         const response = await axios.get(`http://localhost:8000/videos/films/${id}/stream/`);
         console.log("Video data:", response.data);
         
-        // Check if we have valid video data
+      
         const movieData = response.data;
         
         if (!movieData.video_url && 
@@ -55,14 +55,14 @@ const VideoPlayerPage = () => {
         } else {
           setMovie(movieData);
           
-          // Set default quality
+          
           if (movieData.qualities && movieData.qualities.length > 0) {
-            // Try to find 720p first as default
+           
             const quality720 = movieData.qualities.find(q => q.quality === '720p');
             if (quality720) {
               setSelectedQuality('720p');
             } else {
-              // Otherwise use the first available quality
+             
               setSelectedQuality(movieData.qualities[0].quality);
             }
           }
@@ -78,7 +78,6 @@ const VideoPlayerPage = () => {
     fetchMovieData();
   }, [id]);
   
-  // Handle video events
   useEffect(() => {
     const videoElement = videoRef.current;
     
@@ -132,15 +131,15 @@ const VideoPlayerPage = () => {
     };
   }, [movie]);
   
-  // Handle auto-hiding controls
+  
   useEffect(() => {
     if (playing) {
-      // Hide controls after 3 seconds
+     
       controlsTimerRef.current = setTimeout(() => {
         setShowControls(false);
       }, 3000);
     } else {
-      // Always show controls when paused
+      
       clearTimeout(controlsTimerRef.current);
       setShowControls(true);
     }
@@ -150,7 +149,7 @@ const VideoPlayerPage = () => {
     };
   }, [playing, showControls]);
   
-  // Handle fullscreen changes
+  
   useEffect(() => {
     const handleFullscreenChange = () => {
       setFullscreen(!!document.fullscreenElement);
@@ -163,7 +162,7 @@ const VideoPlayerPage = () => {
     };
   }, []);
   
-  // Helper function to format time
+  
   const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -176,7 +175,7 @@ const VideoPlayerPage = () => {
     ].filter(Boolean).join(':');
   };
   
-  // Video control functions
+  
   const togglePlay = () => {
     if (videoRef.current) {
       if (playing) {
@@ -210,14 +209,14 @@ const VideoPlayerPage = () => {
   };
   
   const changeQuality = (quality) => {
-    // Store current time to resume from same position
+    
     const currentTimePosition = videoRef.current?.currentTime || 0;
     const wasPlaying = playing;
     
     setSelectedQuality(quality);
     setShowQualityMenu(false);
     
-    // Resume playback in the new quality after changing source
+    
     if (videoRef.current) {
       videoRef.current.addEventListener('loadedmetadata', () => {
         videoRef.current.currentTime = currentTimePosition;
@@ -234,11 +233,11 @@ const VideoPlayerPage = () => {
     }
   };
   
-  // Find current video source URL with better fallbacks
+  
   const getCurrentVideoUrl = () => {
     if (!movie) return '';
     
-    // If we have qualities, use the selected one
+  
     if (movie.qualities && movie.qualities.length > 0) {
       const qualityOption = movie.qualities.find(q => q.quality === selectedQuality);
       if (qualityOption && qualityOption.video_url) {
@@ -246,17 +245,17 @@ const VideoPlayerPage = () => {
       }
     }
     
-    // Fallback to movie's video_url if available
+   
     if (movie.video_url) {
       return movie.video_url;
     }
     
-    // Last resort: use a demo video
+   
     console.log("No video URL found, using demo video");
     return "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_10mb.mp4";
   };
   
-  // Show loading state
+  
   if (loading) {
     return (
       <div className="bg-black h-screen w-screen flex items-center justify-center">
@@ -265,7 +264,7 @@ const VideoPlayerPage = () => {
     );
   }
   
-  // Show error state
+  
   if (error) {
     return (
       <div className="bg-black h-screen w-screen flex flex-col items-center justify-center text-white p-4">
@@ -281,7 +280,7 @@ const VideoPlayerPage = () => {
     );
   }
   
-  // Main player UI
+  
   return (
     <div 
       ref={playerRef}
@@ -297,7 +296,7 @@ const VideoPlayerPage = () => {
         }
       }}
     >
-      {/* Video Element */}
+     
       <video
         ref={videoRef}
         className="absolute top-0 left-0 w-full h-full object-contain"
@@ -307,14 +306,14 @@ const VideoPlayerPage = () => {
         autoPlay
       />
       
-      {/* Buffering Indicator */}
+      
       {bufferingState && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-t-transparent border-red-600"></div>
         </div>
       )}
       
-      {/* Play/Pause Big Button Overlay (shows briefly when toggling) */}
+      
       {playing && showControls && (
         <div 
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
@@ -335,7 +334,7 @@ const VideoPlayerPage = () => {
         </div>
       )}
       
-      {/* Top Controls */}
+  
       <div 
         className={`absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/80 to-transparent
                    transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
@@ -351,12 +350,12 @@ const VideoPlayerPage = () => {
         </div>
       </div>
       
-      {/* Bottom Controls */}
+      
       <div 
         className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent
                    transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
       >
-        {/* Progress Bar */}
+        
         <div 
           className="w-full h-1 bg-gray-600 cursor-pointer mb-4"
           onClick={handleSeek}
@@ -367,15 +366,15 @@ const VideoPlayerPage = () => {
           ></div>
         </div>
         
-        {/* Controls Row */}
+        
         <div className="flex items-center justify-between">
-          {/* Left Controls */}
+          
           <div className="flex items-center">
             <button onClick={togglePlay} className="mr-4 text-white hover:text-red-500">
               {playing ? <Pause size={22} /> : <Play size={22} />}
             </button>
             
-            {/* Volume Control */}
+            
             <div className="flex items-center mr-4">
               <button onClick={toggleMute} className="text-white hover:text-red-500 mr-2">
                 {muted || volume === 0 ? <VolumeX size={22} /> : <Volume2 size={22} />}
@@ -391,15 +390,15 @@ const VideoPlayerPage = () => {
               />
             </div>
             
-            {/* Time Display */}
+            
             <div className="text-white text-sm">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
           </div>
           
-          {/* Right Controls */}
+          
           <div className="flex items-center">
-            {/* Quality Selector */}
+            
             <div className="relative mr-4">
               <button 
                 className="text-white flex items-center hover:text-red-500"
@@ -410,7 +409,7 @@ const VideoPlayerPage = () => {
                 <ChevronDown size={16} />
               </button>
               
-              {/* Quality Menu */}
+              
               {showQualityMenu && (
                 <div className="absolute bottom-full right-0 mb-2 bg-gray-900 rounded-md shadow-lg overflow-hidden">
                   {movie?.qualities?.map((q) => (
@@ -427,7 +426,7 @@ const VideoPlayerPage = () => {
               )}
             </div>
             
-            {/* Fullscreen Button */}
+            
             <button 
               onClick={toggleFullscreen}
               className="text-white hover:text-red-500"

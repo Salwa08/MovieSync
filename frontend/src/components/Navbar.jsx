@@ -34,7 +34,7 @@ const Navbar = () => {
           ))}
         </div>
       </div>
-      {/* Add user/profile dropdown or search here if needed */}
+      
     </nav>
   );
 };

@@ -10,3 +10,10 @@ frontend/src/backend_changes_for_series_cast.py
 frontend/src/how_to_fix_series_cast.py
 frontend/src/notes.py
 frontend/src/notes_series_cast.py
+# Catch-all for any dev/notes scripts in frontend/src
+frontend/src/*notes*
+frontend/src/*how_to*
+frontend/src/*endpoint*
+frontend/src/*.md
+frontend/src/*.txt
+frontend/src/*.py

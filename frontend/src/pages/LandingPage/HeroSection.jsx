@@ -47,7 +47,7 @@ function HeroSection() {
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden flex flex-col mt-[-91px] bg-[#141414]" id="home">
-      {/* Background movie grid */}
+      
       <div className="absolute top-0 left-0 right-0 w-full grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1 opacity-90 bg-[#141414]">
         {displayedMovies.map((movie) => (
           <div
@@ -71,7 +71,7 @@ function HeroSection() {
         ))}
       </div>
 
-      {/* Overlay gradient */}
+     
       <div className="absolute inset-0 z-10 pt-[91px]" style={{
         background: 'linear-gradient(to bottom, rgba(23,23,23,0.9), rgba(23,23,23,0.6), rgba(23,23,23,0.9), rgba(23,23,23,1))'
       }} />

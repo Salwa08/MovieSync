@@ -29,7 +29,7 @@ const ProfilePage = () => {
     }
   }, [isAuthenticated, loading, navigate]);
 
-  // Wrap fetchProfileData in useCallback for stable reference
+ 
   const fetchProfileData = useCallback(async () => {
     setStatsLoading(true);
     setFetchError(null);
@@ -82,12 +82,10 @@ const ProfilePage = () => {
       );
       if (res.ok) {
         const resData = await res.json();
-        // Always use the full URL for the avatar
         const avatarUrl = resData.avatar.startsWith("http")
           ? resData.avatar
           : `http://localhost:8000${resData.avatar}`;
         setAvatarPreview(avatarUrl);
-        // Refetch profile data to persist avatar change
         await fetchProfileData();
       } else {
         alert("Failed to upload avatar");
@@ -97,7 +95,6 @@ const ProfilePage = () => {
     }
   };
 
-  // Unfavourite handler
   const handleUnfavourite = async (movie) => {
     if (!token) return;
     try {
@@ -119,13 +116,11 @@ const ProfilePage = () => {
     }
   };
 
-  // Handler to update both stats and currentUser after profile update
+  
   const handleProfileUpdate = async () => {
     await fetchProfileData();
-    // No need to update currentUser here; useEffect below will handle it
   };
 
-  // Sync currentUser with profileStats after profile update
   useEffect(() => {
     if (
       profileStats &&
@@ -176,7 +171,7 @@ const ProfilePage = () => {
     avatar:
       profileStats?.avatar ||
       currentUser?.avatar ||
-      "../../assets/default_avatar.png", // Use backend avatar if available
+      "../../assets/default_avatar.png", 
     subscription: profileStats?.subscription || "Free",
     moviesWatched: profileStats?.movies_watched || 0,
     moviesThisMonth: profileStats?.movies_this_month || 0,
@@ -189,9 +184,9 @@ const ProfilePage = () => {
       <Navbar />
       <div className="flex flex-col items-center w-full mt-24">
         {" "}
-        {/* Add margin-top to push content below navbar */}
+        
         <div className="w-full max-w-5xl px-4 py-8">
-          {/* Profile Header */}
+          
           <div className="flex flex-col md:flex-row items-start gap-8 mb-8">
             <div className="relative">
               <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-800">
@@ -202,7 +197,7 @@ const ProfilePage = () => {
                   height={128}
                   className="w-full h-full object-cover"
                 />
-                {/* Edit avatar icon */}
+                
                 <label
                   htmlFor="avatar-upload"
                   className="absolute bottom-2 right-2 bg-white text-red-600 rounded-full p-2 shadow hover:bg-red-100 transition cursor-pointer"
@@ -263,7 +258,7 @@ const ProfilePage = () => {
               </div>
             </div>
           </div>
-          {/* Tab Navigation */}
+          
           <div className="flex gap-4 mb-8 border-b border-gray-800">
             {["overview", "watching", "favorites", "settings"].map((tab) => (
               <button
@@ -279,7 +274,7 @@ const ProfilePage = () => {
               </button>
             ))}
           </div>
-          {/* Tab Content */}
+          
           <ProfileTabs
             activeTab={activeTab}
             user={user}

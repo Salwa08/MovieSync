@@ -8,12 +8,12 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState({
-    type: "", // 'success', 'error', or ''
+    type: "", 
     message: "",
   });
 
   const validateEmail = (email) => {
-    // More comprehensive email validation regex
+    
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
@@ -21,10 +21,10 @@ const ForgotPasswordPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset status
+    
     setStatus({ type: "", message: "" });
 
-    // Validate email
+    
     if (!email) {
       setStatus({ type: "error", message: "Please enter your email address." });
       return;
@@ -41,7 +41,6 @@ const ForgotPasswordPage = () => {
     setIsSubmitting(true);
 
     try {
-      // Call the API to check email existence
       const response = await checkEmailExistence(email);
 
       setStatus({

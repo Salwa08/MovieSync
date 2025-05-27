@@ -31,7 +31,7 @@ function KidsPage() {
       });
   }, [isAuthenticated, navigate]);
 
-  // Sectioned data for horizontal scrolls
+  
   const popularKids = kids.filter((k) => k.is_popular === true);
   const familyKids = kids.filter((k) =>
     Array.isArray(k.Genre)
@@ -49,11 +49,11 @@ function KidsPage() {
       : String(k.Genre).toLowerCase().includes("drama")
   );
 
-  // State for see more toggles
+  
   const [hearted, setHearted] = useState({});
   const { user } = useUser();
 
-  // Heart logic (copy from MovieCard, improved with error handling and preventDefault)
+  
   const handleHeartClick = async (e, doc) => {
     e.preventDefault(); // Prevent navigating to movie page
     e.stopPropagation();

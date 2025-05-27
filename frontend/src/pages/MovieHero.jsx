@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const MovieHero = ({ movie, children, onNext, onPrevious }) => {
   return (
     <div className="relative w-full text-white">
-      {/* Large Poster Background */}
+      
       <div
         className="relative h-[100vh] w-full bg-cover transition-all duration-500 bg-[30%_20%]"
         style={{
@@ -59,7 +59,7 @@ const MovieHero = ({ movie, children, onNext, onPrevious }) => {
               <button className="hidden md:block bg-black md:hover:bg-gray-600 border border-white text-white px-6 py-2 rounded-full text-lg font-semibold transition">
                 + My List
               </button>
-              {/*mobile*/}
+              
               <a
                 href={movie?.Trailer}
                 target="_blank"

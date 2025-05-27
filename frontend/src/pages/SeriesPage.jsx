@@ -38,23 +38,18 @@ function SeriesPage() {
     axios
       .get("http://localhost:8000/videos/series/")
       .then((response) => {
-        // Handle paginated response from Django REST Framework
         console.log("Series API response:", response.data);
         let seriesList = [];
 
         if (response.data && response.data.results) {
-          // Handle paginated response
           seriesList = response.data.results;
         } else if (Array.isArray(response.data)) {
-          // Handle array response
           seriesList = response.data;
         } else {
-          // Handle other formats
           seriesList = response.data.series || [];
         }
         setAllSeries(seriesList);
 
-        // Categorize series by their properties
         const popular = seriesList.filter(
           (serie) => serie.category === "popular"
         );

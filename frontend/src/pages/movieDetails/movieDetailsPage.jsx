@@ -10,15 +10,15 @@ import MovieRecommendations from "./movieRecommendations";
 const MovieDetails = (props) => {
   const { state } = useLocation();
   const params = useParams();
-  // Force null initial state to ensure loading on navigation
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("cast");
   const [error, setError] = useState(null);
 
-  // Determine type from props, state, or URL
+  
   let type = null;
   if (props.isSerie) type = "series";
+  else if (state?.movie?.type) type = state.movie.type;
   else if (movie?.type) type = movie.type;
   else if (window.location.pathname.includes("series")) type = "series";
   else if (window.location.pathname.includes("documentary"))
@@ -26,7 +26,7 @@ const MovieDetails = (props) => {
   else if (window.location.pathname.includes("kids")) type = "kids";
   else type = "movie";
 
-  // Use state.movie if available on navigation
+ 
   useEffect(() => {
     if (state?.movie) {
       console.log("Using movie from navigation state:", state.movie);
@@ -35,18 +35,18 @@ const MovieDetails = (props) => {
     }
   }, [state]);
 
-  // Always fetch fresh data when params.id changes, but only if state.movie is not present
+  
   useEffect(() => {
     if (!params.id) return;
-    if (state?.movie) return; // Don't fetch if we already have the movie from navigation
+    if (state?.movie) return;
 
-    // If we have state.movie, clear any previous error
+    
     if (state?.movie && error) setError(null);
 
     console.log(`Fetching movie with ID: ${params.id}`);
     setLoading(true);
 
-    // Build the URL based on content type
+    
     let url = "";
     if (type === "series")
       url = `http://localhost:8000/videos/series/${params.id}/`;
@@ -65,15 +65,14 @@ const MovieDetails = (props) => {
       })
       .catch((err) => {
         console.error("Error fetching movie details:", err);
-        // Only show error if we don't have state.movie
         if (!state?.movie) {
           setError("Failed to load movie details");
         } else {
-          setError(null); // If we have state.movie, clear error
+          setError(null); 
         }
         setLoading(false);
       });
-  }, [params.id, type, state]); // Remove 'movie' from dependencies to prevent conflicts
+  }, [params.id, type, state, error]); 
 
   // Debug logs
   console.log("MovieDetails state:", {

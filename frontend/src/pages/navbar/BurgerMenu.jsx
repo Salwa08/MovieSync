@@ -24,10 +24,10 @@ const BurgerMenu = ({ links }) => {
         )}
       </button>
 
-      {/* Mobile Menu */}
+      
       {isOpen && (
         <div className="absolute top-20 right-2 w-64 bg-black/95 rounded-lg shadow-lg py-5 px-6">
-          {/* Navigation Links */}
+          
           <div className="flex flex-col gap-4">
             {links.map((link, index) => (
               <a
@@ -41,10 +41,10 @@ const BurgerMenu = ({ links }) => {
             ))}
           </div>
 
-          {/* Divider */}
+          
           <div className="h-px bg-gray-700 my-4" />
 
-          {/* Icons Section */}
+         
           <div className="flex flex-col gap-4">
             <button className="flex items-center gap-3 text-white md:hover:text-red-600 transition-colors">
               <BsFillPersonFill size={20} />

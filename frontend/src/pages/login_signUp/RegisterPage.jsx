@@ -23,11 +23,11 @@ const RegisterPage = () => {
     });
   };
 
-  // MAKE SURE THIS FUNCTION IS COMPLETE
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
+   
     if (formData.password !== formData.password2) {
       setError("Passwords do not match");
       return;
@@ -57,7 +57,7 @@ const RegisterPage = () => {
 
       console.log("Registration successful!", response);
 
-      // On success, redirect to login
+      
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);

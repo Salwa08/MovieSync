@@ -28,7 +28,7 @@ const FavouritesList = ({ favourites, handleUnfavourite }) => (
                   className="object-cover group-hover:scale-105 transition-transform w-full h-full"
                 />
               </Link>
-              {/* Heart icon for unfavourite, absolutely positioned */}
+              
               <button
                 className="absolute top-2 right-2 z-10 rounded-full p-2 bg-red-600 hover:bg-neutral-800/80 transition-opacity"
                 aria-label="Remove from favourites"

@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { FaPlay } from "react-icons/fa";
 
 const MovieEpisodes = ({ movie }) => {
   const [seasons, setSeasons] = useState([]);
   const [activeSeason, setActiveSeason] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [episodes, setEpisodes] = useState([]);
 
-  // Function to extract season number from format "Series_S1"
+
+  
   const extractSeasonNumber = (seasonString) => {
     if (!seasonString) return null;
     const match = seasonString.match(/_S(\d+)/);
@@ -19,7 +18,7 @@ const MovieEpisodes = ({ movie }) => {
     if (movie?.id) {
       setLoading(true);
       const serieTitle = movie.Titre;
-      // Hardcoded episodes data based on your database example
+     
       const dummyEpisodes = [
         {
           Season: `${serieTitle}_S1`,
@@ -52,7 +51,7 @@ const MovieEpisodes = ({ movie }) => {
           Video: "https://www.youtube.com/watch?v=1906863",
         },
       ];
-      // Group episodes by season
+    
       const episodesBySeason = {};
       dummyEpisodes.forEach((episode) => {
         const seasonNum = extractSeasonNumber(episode.Season);
@@ -70,7 +69,7 @@ const MovieEpisodes = ({ movie }) => {
           Description: `Episode ${episode.Nb_episode} of ${movie.Titre} Season ${seasonNum}`,
         });
       });
-      // Transform to array format and sort episodes
+      
       const seasonArray = Object.keys(episodesBySeason)
         .map((seasonNum) => ({
           seasonNumber: parseInt(seasonNum),

@@ -17,3 +17,4 @@ frontend/src/*endpoint*
 frontend/src/*.md
 frontend/src/*.txt
 frontend/src/*.py
+.env

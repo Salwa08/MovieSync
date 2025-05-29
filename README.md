@@ -11,7 +11,7 @@ MovieSync is a modern web application for discovering, watching, and managing yo
 - Responsive, modern UI with horizontal scrolls and hero sections
 - Robust error handling and instant navigation
 - User authentication and profile management
-- Accessible and fully responsive design 
+- Accessible and fully responsive design
 
 ## Tech Stack
 
@@ -61,10 +61,14 @@ MovieSync is a modern web application for discovering, watching, and managing yo
 - Use a production-ready database (e.g., PostgreSQL)
 - Configure static/media file serving
 
+## API Keys
+
+- This project requires a TMDB API key. Register for a free account at [TMDB](https://www.themoviedb.org/settings/api) and set your API key in `backend/settings.py` as `TMDB_API_KEY = "<YOUR_TMDB_API_KEY>"`.
+
 ## License
 
 MIT
 
 ---
 
-
+_For a full demo script in French, see the project documentation._

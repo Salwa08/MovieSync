@@ -148,8 +148,7 @@ CORS_ALLOWED_ORIGINS = [
 
 load_dotenv()
 
-
-TMDB_API_KEY = os.getenv('d0d4b33791fab1f5e75924ccb1f14603')
+TMDB_API_KEY = os.getenv("TMDB_API_KEY", "<YOUR_TMDB_API_KEY>")  # Get your own API key from https://www.themoviedb.org/settings/api and set it here
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
